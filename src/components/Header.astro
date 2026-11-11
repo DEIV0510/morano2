@@ -1,0 +1,94 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { EMPRESAS } from '../data/empresas.ts';
+import { NAV, SITE } from '../lib/site.ts';
+
+interface Props {
+  overlay: boolean;
+  current?: string;
+}
+const { overlay, current } = Astro.props;
+const empresasLink = NAV.find((n) => n.label === 'Empresas')!;
+const rest = NAV.filter((n) => n.label !== 'Empresas' && n.label !== 'Contacto');
+const isCurrent = (href: string) => (current && href.startsWith(current) ? 'page' : undefined);
+---
+
+<header class="site-header" data-header data-overlay={overlay ? 'true' : 'false'} data-solid={overlay ? 'false' : 'true'}>
+  <div class="wrap site-header__inner">
+    <a class="site-header__brand" href="/" aria-label="Morano Gruppo — Inicio">
+      <Logo class="site-header__logo" />
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <ul role="list">
+        <li><a href={rest[0].href}>{rest[0].label}</a></li>
+        <li class="nav-drop" data-drop>
+          <button class="nav-drop__btn" type="button" aria-expanded="false" aria-controls="drop-empresas" data-drop-btn>
+            {empresasLink.label}
+            <Icon name="chevron" size={14} />
+          </button>
+          <div class="nav-drop__panel" id="drop-empresas" data-drop-panel>
+            <ul role="list">
+              {
+                EMPRESAS.map((e) => (
+                  <li>
+                    <a href={`/${e.slug}/`} aria-current={current === `/${e.slug}/` ? 'page' : undefined}>
+                      <span class="nav-drop__name">{e.nombre}</span>
+                      <span class="nav-drop__area">{e.area}</span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+        {rest.slice(1).map((l) => <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="site-header__actions">
+      <a class="btn btn--gold btn--sm site-header__cta" href="/#contacto">Contacto</a>
+      <button class="icon-btn menu-btn" type="button" data-menu-open aria-haspopup="dialog" aria-controls="mobile-menu">
+        <Icon name="menu" />
+        <span class="visually-hidden">Menú</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog id="mobile-menu" class="menu" aria-label="Menú">
+  <div class="menu__top">
+    <a class="menu__brand" href="/" data-menu-close><Logo class="menu__logo" on="dark" eager={false} /></a>
+    <button class="icon-btn" type="button" data-menu-close><Icon name="close" /><span class="visually-hidden">Cerrar</span></button>
+  </div>
+  <nav class="menu__nav" aria-label="Principal">
+    <ol role="list">
+      <li><a href="/" data-menu-close><span class="menu__idx num">01</span>Inicio</a></li>
+      {
+        NAV.map((l, i) => (
+          <li>
+            <a href={l.href} data-menu-close>
+              <span class="menu__idx num">{String(i + 2).padStart(2, '0')}</span>
+              {l.label}
+            </a>
+            {l.label === 'Empresas' && (
+              <ul role="list" class="menu__sub">
+                {EMPRESAS.map((e) => (
+                  <li>
+                    <a href={`/${e.slug}/`} data-menu-close>{e.nombre}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+  <div class="menu__foot">
+    <a class="btn btn--gold btn--block" href="/#contacto" data-menu-close>Contacto</a>
+    <div class="menu__meta">
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      <a href={SITE.instagramUrl} rel="noopener" target="_blank">Instagram @{SITE.instagram}</a>
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,204 @@
+---
+// Páginas de cada empresa (/morano-oleo/…) y de cada noticia (/<slug>/), con las
+// mismas direcciones que la web actual para no romper enlaces ni posiciones.
+import Base from '../layouts/Base.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import EmpresaLogo from '../components/EmpresaLogo.astro';
+import NoticiaCard from '../components/NoticiaCard.astro';
+import { EMPRESAS, type Empresa } from '../data/empresas.ts';
+import { NOTICIAS, fecha, type Noticia } from '../lib/noticias.ts';
+import { HOME, SITE } from '../lib/site.ts';
+import images from '../data/images.json';
+
+export function getStaticPaths() {
+  return [
+    ...EMPRESAS.map((e) => ({ params: { slug: e.slug }, props: { tipo: 'empresa' as const, empresa: e } })),
+    ...NOTICIAS.map((n) => ({ params: { slug: n.slug }, props: { tipo: 'noticia' as const, noticia: n } })),
+  ];
+}
+
+type Props = { tipo: 'empresa'; empresa: Empresa } | { tipo: 'noticia'; noticia: Noticia };
+const props = Astro.props as Props;
+const path = `/${Astro.params.slug}/`;
+
+const breadcrumb = (items: [string, string][]) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map(([name, url], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE.url + url })),
+});
+
+let e: Empresa | undefined;
+let otras: Empresa[] = [];
+let n: Noticia | undefined;
+let mas: Noticia[] = [];
+if (props.tipo === 'empresa') {
+  e = props.empresa;
+  const i = EMPRESAS.indexOf(e);
+  otras = [...EMPRESAS.slice(i + 1), ...EMPRESAS.slice(0, i)];
+} else {
+  n = props.noticia;
+  const i = NOTICIAS.indexOf(n);
+  mas = [...NOTICIAS.slice(i + 1), ...NOTICIAS.slice(0, i)].slice(0, 3);
+}
+const ogImage = e ? `/img/${e.foto}-${images[e.foto].widths.at(-1)}.jpg` : n ? `/img/${n.image}-${images[n.image].widths.at(-1)}.jpg` : undefined;
+---
+
+{
+  e && (
+    <Base
+      title={`${e.nombre} | ${e.lema} — Morano Gruppo`}
+      description={e.descripcion.slice(0, 158).replace(/\s\S*$/, '') + '…'}
+      path={path}
+      overlayHeader
+      ogImage={ogImage}
+      current={path}
+      jsonLd={[breadcrumb([['Inicio', '/'], ['Empresas', '/#empresas'], [e.nombre, path]])]}
+    >
+      <section class="co-hero" aria-labelledby="co-title">
+        <div class="co-hero__media">
+          <Picture name={e.foto} alt="" sizes="100vw" priority />
+        </div>
+        <div class="co-hero__shade" aria-hidden="true" />
+        <div class="wrap co-hero__inner">
+          <ol class="breadcrumb breadcrumb--light" role="list">
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/#empresas">Empresas</a></li>
+            <li aria-current="page">{e.nombre}</li>
+          </ol>
+          <p class="label co-hero__label">{e.area}</p>
+          <h1 id="co-title" class="display co-hero__title">{e.nombre}</h1>
+          <p class="lead co-hero__lema">{e.lema}.</p>
+        </div>
+      </section>
+
+      <section class="section co-body" aria-label={`Sobre ${e.nombre}`}>
+        <div class="wrap grid co-body__grid">
+          <div class="co-body__intro">
+            <div class="co-body__logo reveal">
+              <EmpresaLogo empresa={e} />
+            </div>
+            <p class="lead reveal">{e.descripcion}</p>
+            <p class="co-body__web reveal">
+              {e.webUrl ? (
+                <a class="link" href={e.webUrl} rel="noopener" target="_blank">
+                  {e.web} <Icon name="arrow-up-right" size={14} />
+                </a>
+              ) : (
+                <span class="co-body__web-text">{e.web}</span>
+              )}
+            </p>
+          </div>
+          <ol class="pillars" role="list">
+            {e.pilares.map((p, i) => (
+              <li class="pillars__item reveal" data-delay={i * 90}>
+                <span class="pillars__n num">{String(i + 1).padStart(2, '0')}</span>
+                <h2 class="pillars__title">{p.titulo}</h2>
+                <p>{p.texto}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        {e.iscc && (
+          <div class="wrap">
+            <div class="iscc reveal">
+              <img class="iscc__seal" src="/img/iscc-520.webp" width="520" height="188" alt="ISCC Certificate Holder — International Sustainability & Carbon Certification" loading="lazy" decoding="async" />
+              <div class="iscc__body">
+                <h2 class="iscc__title">Certificación ISCC EU</h2>
+                <p class="muted">{HOME.iscc}</p>
+              </div>
+              <ul class="iscc__list" role="list">
+                {HOME.isccPuntos.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section class="section others" aria-labelledby="others-title">
+        <div class="wrap">
+          <div class="others__head">
+            <h2 id="others-title" class="h3">Otras empresas del Gruppo</h2>
+            <a class="link" href="/#contacto">
+              Contactar <Icon name="arrow" />
+            </a>
+          </div>
+          <ul class="others__list" role="list">
+            {otras.map((o) => (
+              <li>
+                <a class="others__item" href={`/${o.slug}/`}>
+                  <span class="others__name">{o.nombre}</span>
+                  <span class="others__area">{o.area}</span>
+                  <Icon name="arrow" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </Base>
+  )
+}
+
+{
+  n && (
+    <Base
+      title={`${n.title} | Noticias — Morano Gruppo`}
+      description={(n.prensa ? n.prensa.resumen : n.excerpt ?? '').slice(0, 158)}
+      path={path}
+      ogImage={ogImage}
+      ogType="article"
+      current="/noticias/"
+      jsonLd={[breadcrumb([['Inicio', '/'], ['Noticias', '/noticias/'], [n.title, path]])]}
+    >
+      <article class="article">
+        <header class="page-head article__head">
+          <div class="wrap article__wrap">
+            <ol class="breadcrumb" role="list">
+              <li><a href="/">Inicio</a></li>
+              <li><a href="/noticias/">Noticias</a></li>
+            </ol>
+            <p class="label">{n.prensa ? `Prensa · ${n.prensa.fuente} · ${fecha(n.prensa.fecha)}` : 'Morano Gruppo'}</p>
+            <h1 class="article__title">{n.title}</h1>
+          </div>
+        </header>
+        <div class="wrap article__wrap">
+          <figure class="article__media photo">
+            <Picture name={n.image} alt="" sizes="(min-width: 980px) 900px, 100vw" priority />
+          </figure>
+          <div class="prose article__body">
+            {n.prensa ? (
+              <>
+                <p class="lead">{n.prensa.resumen}</p>
+                <p>
+                  <a class="btn btn--outline" href={n.prensa.url} rel="noopener" target="_blank">
+                    Leer en {n.prensa.fuente} <Icon name="arrow-up-right" size={16} />
+                  </a>
+                </p>
+              </>
+            ) : (
+              n.paragraphs!.map((p, i) => <p class={i === 0 ? 'lead' : undefined} set:html={p} />)
+            )}
+          </div>
+        </div>
+      </article>
+      <section class="section news news--more" aria-labelledby="more-title">
+        <div class="wrap">
+          <div class="news__head">
+            <h2 id="more-title" class="h3">Más noticias</h2>
+            <a class="link" href="/noticias/">
+              Todas las noticias <Icon name="arrow" />
+            </a>
+          </div>
+          <div class="news__grid">
+            {mas.map((m, i) => (
+              <NoticiaCard n={m} delay={i * 90} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </Base>
+  )
+}

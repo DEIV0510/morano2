@@ -1,0 +1,35 @@
+---
+// Logotipo oficial de Morano Gruppo en horizontal. Lleva las dos versiones:
+// la de fondo claro y la de fondo oscuro; el CSS muestra la que corresponde.
+import brand from '../data/brand.json';
+interface Props {
+  class?: string;
+  /** auto = según el estado de la cabecera; light/dark = fondo fijo. */
+  on?: 'auto' | 'light' | 'dark';
+  eager?: boolean;
+}
+const { class: cls = '', on = 'auto', eager = true } = Astro.props;
+const d = brand['gruppo-h'];
+---
+
+<span class:list={['logo', `logo--${on}`, cls]}>
+  {
+    on !== 'dark' && (
+      <img class="logo__img logo__img--light" src="/brand/gruppo-h.png" width={d.width} height={d.height} alt="Morano Gruppo" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    )
+  }
+  {
+    on !== 'light' && (
+      <img
+        class="logo__img logo__img--dark"
+        src="/brand/gruppo-h-reverse.png"
+        width={d.width}
+        height={d.height}
+        alt={on === 'dark' ? 'Morano Gruppo' : ''}
+        aria-hidden={on === 'dark' ? undefined : 'true'}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    )
+  }
+</span>

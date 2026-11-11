@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import NoticiaCard from '../components/NoticiaCard.astro';
+import { NOTICIAS } from '../lib/noticias.ts';
+---
+
+<Base
+  title="Noticias | Morano Gruppo"
+  description="Actualidad de Morano Gruppo: sector palmero, alianzas, responsabilidad social y presencia en prensa nacional e internacional."
+  path="/noticias/"
+  current="/noticias/"
+>
+  <header class="page-head">
+    <div class="wrap">
+      <ol class="breadcrumb" role="list">
+        <li><a href="/">Inicio</a></li>
+        <li aria-current="page">Noticias</li>
+      </ol>
+      <h1 class="h2">
+        <span>Noticias</span>
+        <span class="page-head__title-2">del Gruppo.</span>
+      </h1>
+    </div>
+  </header>
+  <section class="section news news--all" aria-label="Todas las noticias">
+    <div class="wrap news__grid">
+      {NOTICIAS.map((n, i) => <NoticiaCard n={n} headingLevel="h2" delay={(i % 3) * 80} />)}
+    </div>
+  </section>
+</Base>

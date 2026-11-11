@@ -1,0 +1,86 @@
+---
+import '../styles/base.css';
+import '../styles/site.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Loader from '../components/Loader.astro';
+import { EMPRESAS } from '../data/empresas.ts';
+import { SITE } from '../lib/site.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta de la página (canónica), p. ej. "/noticias/". */
+  path: string;
+  overlayHeader?: boolean;
+  showLoader?: boolean;
+  noindex?: boolean;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  /** Ruta activa en la navegación. */
+  current?: string;
+}
+const { title, description, path, overlayHeader = false, showLoader = false, noindex = false, ogImage = '/img/og-morano-gruppo.jpg', ogType = 'website', jsonLd = [], current } = Astro.props;
+
+const canonical = SITE.url + path;
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE.url}/#organization`,
+  name: 'Morano Gruppo',
+  url: `${SITE.url}/`,
+  logo: `${SITE.url}/brand/gruppo.png`,
+  image: `${SITE.url}/img/og-morano-gruppo.jpg`,
+  slogan: SITE.lema,
+  description: SITE.descripcion,
+  email: SITE.email,
+  address: { '@type': 'PostalAddress', streetAddress: SITE.direccion, addressLocality: 'Santa Marta', addressRegion: 'Magdalena', addressCountry: 'CO' },
+  sameAs: [SITE.instagramUrl],
+  subOrganization: EMPRESAS.map((e) => ({ '@type': 'Organization', name: e.nombre, url: `${SITE.url}/${e.slug}/` })),
+};
+const ld = [organization, ...jsonLd];
+const ldJson = JSON.stringify(ld.length === 1 ? ld[0] : ld).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    {showLoader && <script is:inline src="/intro.js"></script>}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Morano Gruppo" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={SITE.url + ogImage} />
+    <meta property="og:locale" content="es_CO" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0f0e0c" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={ldJson} />
+    <slot name="head" />
+  </head>
+  <body data-overlay-header={overlayHeader ? 'true' : undefined}>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    {showLoader && <Loader />}
+    <Header overlay={overlayHeader} current={current} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

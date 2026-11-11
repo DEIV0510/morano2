@@ -1,0 +1,25 @@
+---
+import Picture from './Picture.astro';
+import Icon from './Icon.astro';
+import type { Noticia } from '../lib/noticias.ts';
+interface Props {
+  n: Noticia;
+  headingLevel?: 'h2' | 'h3';
+  delay?: number;
+}
+const { n, headingLevel = 'h3', delay = 0 } = Astro.props;
+const H = headingLevel;
+const texto = n.prensa ? n.prensa.resumen : n.excerpt;
+---
+
+<article class="news-card reveal" data-delay={delay}>
+  <a class="news-card__link" href={`/${n.slug}/`}>
+    <div class="news-card__media photo">
+      <Picture name={n.image} alt="" sizes="(min-width: 1100px) 30vw, (min-width: 700px) 46vw, 92vw" />
+    </div>
+    <p class="news-card__src">{n.prensa ? `Prensa · ${n.prensa.fuente}` : 'Morano Gruppo'}</p>
+    <H class="news-card__title">{n.title}</H>
+    <p class="news-card__text">{texto}</p>
+    <span class="news-card__more">Leer <Icon name="arrow" /></span>
+  </a>
+</article>

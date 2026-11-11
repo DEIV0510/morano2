@@ -1,0 +1,31 @@
+{
+  "logo-oleo": {
+    "width": 720,
+    "height": 110
+  },
+  "logo-tesoro": {
+    "width": 720,
+    "height": 189
+  },
+  "logo-bio": {
+    "width": 209,
+    "height": 165
+  },
+  "logo-motrade": {
+    "width": 613,
+    "height": 77
+  },
+  "logo-famar": {
+    "width": 720,
+    "height": 127
+  },
+  "logo-usa": {
+    "width": 720,
+    "height": 116
+  },
+  "logo-europe": {
+    "width": 1296,
+    "height": 166,
+    "svg": true
+  }
+}

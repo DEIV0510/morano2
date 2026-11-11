@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { EMPRESAS } from '../data/empresas.ts';
+import { NAV, SITE } from '../lib/site.ts';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <Logo class="site-footer__logo" on="dark" eager={false} />
+        <p class="site-footer__desc">{SITE.descripcion}</p>
+        <p class="site-footer__slogan">{SITE.lema}</p>
+      </div>
+      <nav class="site-footer__col" aria-label="Navegación">
+        <h2 class="site-footer__h">Navegación</h2>
+        <ul role="list">
+          <li><a href="/">Inicio</a></li>
+          {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+      <nav class="site-footer__col" aria-label="Empresas del Gruppo">
+        <h2 class="site-footer__h">Empresas</h2>
+        <ul role="list">
+          {EMPRESAS.map((e) => <li><a href={`/${e.slug}/`}>{e.nombre}</a></li>)}
+        </ul>
+      </nav>
+      <address class="site-footer__col site-footer__contact">
+        <h2 class="site-footer__h">Contacto</h2>
+        <p><a href={SITE.mapsUrl} rel="noopener" target="_blank">{SITE.direccion}<br />{SITE.ciudad}</a></p>
+        <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        <p class="site-footer__social">
+          <a href={SITE.instagramUrl} rel="noopener" target="_blank" aria-label="Instagram @moranogruppo"><Icon name="instagram" size={20} /> @{SITE.instagram}</a>
+        </p>
+      </address>
+    </div>
+    <div class="site-footer__bottom">
+      <p>© {year} Morano Gruppo. Todos los derechos reservados.</p>
+      <p>Santa Marta · Colombia</p>
+    </div>
+  </div>
+</footer>

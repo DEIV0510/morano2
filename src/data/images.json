@@ -1,0 +1,346 @@
+{
+  "planta-tanques": {
+    "width": 1600,
+    "height": 1067,
+    "widths": [
+      960,
+      1440,
+      1600
+    ],
+    "color": "#080808"
+  },
+  "cultivo-palma": {
+    "width": 1600,
+    "height": 1066,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#384828"
+  },
+  "cosecha-racimo": {
+    "width": 1600,
+    "height": 2401,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#383828"
+  },
+  "planta-exterior": {
+    "width": 1280,
+    "height": 960,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#4888e8"
+  },
+  "card-oleo": {
+    "width": 960,
+    "height": 1280,
+    "widths": [
+      640,
+      960
+    ],
+    "color": "#180808"
+  },
+  "card-motrade": {
+    "width": 1600,
+    "height": 1068,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#283838"
+  },
+  "card-bio": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#484838"
+  },
+  "card-usa": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#383838"
+  },
+  "card-europe": {
+    "width": 1280,
+    "height": 853,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#f8b808"
+  },
+  "card-famar": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#f8f8f8"
+  },
+  "oleo-planta": {
+    "width": 1200,
+    "height": 1600,
+    "widths": [
+      640,
+      960,
+      1200
+    ],
+    "color": "#081818"
+  },
+  "tesoro-linea": {
+    "width": 1200,
+    "height": 1600,
+    "widths": [
+      640,
+      960,
+      1200
+    ],
+    "color": "#888888"
+  },
+  "bio-fruto": {
+    "width": 2560,
+    "height": 1509,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#d8c8b8"
+  },
+  "bio-envasado": {
+    "width": 960,
+    "height": 1280,
+    "widths": [
+      640,
+      960
+    ],
+    "color": "#787878"
+  },
+  "motrade-planta": {
+    "width": 1600,
+    "height": 2133,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#4898f8"
+  },
+  "famar-bodega": {
+    "width": 960,
+    "height": 1280,
+    "widths": [
+      640,
+      960
+    ],
+    "color": "#787868"
+  },
+  "europe-refineria": {
+    "width": 1280,
+    "height": 960,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#787868"
+  },
+  "usa-bodega": {
+    "width": 1200,
+    "height": 1600,
+    "widths": [
+      640,
+      960,
+      1200
+    ],
+    "color": "#181818"
+  },
+  "racimo": {
+    "width": 1600,
+    "height": 2401,
+    "widths": [
+      640,
+      960,
+      1280
+    ],
+    "color": "#181818"
+  },
+  "tesoro-mesa": {
+    "width": 580,
+    "height": 870,
+    "widths": [
+      580
+    ],
+    "color": "#f8e8c8"
+  },
+  "n-india": {
+    "width": 980,
+    "height": 1306,
+    "widths": [
+      480,
+      800,
+      980
+    ],
+    "color": "#080808"
+  },
+  "n-semana": {
+    "width": 1280,
+    "height": 720,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#282818"
+  },
+  "n-bienestar": {
+    "width": 1170,
+    "height": 655,
+    "widths": [
+      480,
+      800,
+      1170
+    ],
+    "color": "#a8a8a8"
+  },
+  "n-encuentro-1": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#f8f8f8"
+  },
+  "n-nitrofert": {
+    "width": 1600,
+    "height": 1375,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#a87848"
+  },
+  "n-educacion": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#686858"
+  },
+  "n-esquemas": {
+    "width": 1169,
+    "height": 771,
+    "widths": [
+      480,
+      800,
+      1169
+    ],
+    "color": "#383838"
+  },
+  "n-manos-mar": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#f8f8f8"
+  },
+  "n-encuentro-2": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#e8e8e8"
+  },
+  "n-ninos": {
+    "width": 1280,
+    "height": 853,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#d8d8d8"
+  },
+  "n-vallenato": {
+    "width": 1200,
+    "height": 1024,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#282828"
+  },
+  "n-santa-marta": {
+    "width": 1280,
+    "height": 853,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#d8d8d8"
+  },
+  "n-icp": {
+    "width": 1600,
+    "height": 1066,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#181818"
+  },
+  "n-36-anos": {
+    "width": 1600,
+    "height": 1066,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "color": "#e8e8e8"
+  },
+  "n-tesoro-cuba": {
+    "width": 580,
+    "height": 387,
+    "widths": [
+      480,
+      580
+    ],
+    "color": "#a8a8a8"
+  }
+}

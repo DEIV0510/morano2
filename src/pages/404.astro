@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Página no encontrada | Morano Gruppo" description="La página que busca no existe o ha cambiado de dirección." path="/404/" noindex>
+  <section class="wrap notfound">
+    <p class="label">Error 404</p>
+    <h1 class="display">Página no encontrada</h1>
+    <p class="lead muted">La dirección no existe o ha cambiado. Puede volver al inicio o ver nuestras empresas.</p>
+    <div class="hero__ctas">
+      <a class="btn" href="/">Ir al inicio <Icon name="arrow" /></a>
+      <a class="btn btn--outline" href="/#empresas">Empresas del Gruppo</a>
+    </div>
+  </section>
+</Base>

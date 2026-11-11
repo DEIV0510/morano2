@@ -1,0 +1,65 @@
+---
+// Contacto: datos del grupo y formulario que abre el correo con el mensaje
+// redactado para info@moranogruppo.com (la web no guarda datos).
+import Icon from './Icon.astro';
+import { SITE } from '../lib/site.ts';
+---
+
+<section class="contact" id="contacto" aria-labelledby="contact-title">
+  <div class="contact__grid">
+    <div class="contact__aside">
+      <div class="contact__aside-inner">
+        <p class="label reveal">Contacto</p>
+        <h2 id="contact-title" class="h2 contact__title reveal">
+          <span>Morano</span>
+          <span>Gruppo</span>
+        </h2>
+        <p class="contact__intro reveal">Escríbanos para conocer nuestras empresas, productos y soluciones.</p>
+        <dl class="contact__list reveal">
+          <div>
+            <dt>Dirección</dt>
+            <dd><a href={SITE.mapsUrl} rel="noopener" target="_blank">{SITE.direccion}<br />{SITE.ciudad}</a></dd>
+          </div>
+          <div>
+            <dt>Correo</dt>
+            <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+          </div>
+          <div>
+            <dt>Instagram</dt>
+            <dd><a href={SITE.instagramUrl} rel="noopener" target="_blank">@{SITE.instagram}</a></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="contact__form-wrap">
+      <form class="form-grid" data-contact-form novalidate data-email={SITE.email}>
+        <label class="field">
+          <span>Nombre</span>
+          <input class="input" name="nombre" autocomplete="name" required minlength="2" maxlength="120" />
+        </label>
+        <label class="field">
+          <span>Teléfono</span>
+          <input class="input" name="telefono" type="tel" inputmode="tel" autocomplete="tel" required pattern="[+0-9 ()\-.]{7,24}" maxlength="24" />
+        </label>
+        <label class="field field--full">
+          <span>Email</span>
+          <input class="input" name="email" type="email" autocomplete="email" required maxlength="160" />
+        </label>
+        <label class="field field--full">
+          <span>Mensaje <span class="opt">(opcional)</span></span>
+          <textarea class="input" name="mensaje" rows="5" maxlength="2000"></textarea>
+        </label>
+        <div class="field--full form-actions">
+          <button class="btn" type="submit">Enviar <Icon name="arrow" /></button>
+          <p class="form-status" data-form-status role="status" aria-live="polite">Se abrirá su correo con el mensaje listo para enviar a {SITE.email}.</p>
+        </div>
+      </form>
+      <div class="form-done" data-form-done hidden tabindex="-1">
+        <p class="h3">Mensaje preparado</p>
+        <p class="muted">Si su correo no se abrió, escríbanos directamente a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+        <button class="link" type="button" data-form-again>Escribir otro mensaje</button>
+      </div>
+    </div>
+  </div>
+</section>

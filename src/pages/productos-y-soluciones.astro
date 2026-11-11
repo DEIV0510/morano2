@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import { CIFRAS, INTRO, LINEAS } from '../data/productos.ts';
+import type images from '../data/images.json';
+
+const FOTOS: Record<string, { name: keyof typeof images; alt: string }> = {
+  '01': { name: 'bio-fruto', alt: 'Fruto de palma y aceite' },
+  '02': { name: 'planta-exterior', alt: 'Planta industrial del grupo' },
+  '03': { name: 'racimo', alt: 'Racimo de fruto de palma' },
+  '04': { name: 'tesoro-mesa', alt: 'Botella de Aceite El Tesoro en la mesa' },
+  '05': { name: 'oleo-planta', alt: 'Interior de la planta de Morano Oleo' },
+};
+---
+
+<Base
+  title="Productos y soluciones | Aceites, grasas, derivados y biomasa de palma — Morano Gruppo"
+  description={INTRO}
+  path="/productos-y-soluciones/"
+  current="/productos-y-soluciones/"
+>
+  <header class="page-head">
+    <div class="wrap grid page-head__grid">
+      <div class="page-head__main">
+        <ol class="breadcrumb" role="list">
+          <li><a href="/">Inicio</a></li>
+          <li aria-current="page">Productos y soluciones</li>
+        </ol>
+        <h1 class="h2">
+          <span>Productos</span>
+          <span class="page-head__title-2">y soluciones.</span>
+        </h1>
+        <p class="lead page-head__lead">{INTRO}</p>
+      </div>
+      <dl class="figures figures--head" data-count-wrap>
+        {
+          CIFRAS.map((c) => (
+            <div class="figures__item">
+              <dt class="figures__num num">
+                <span data-count={c.valor}>{c.valor}</span>
+                {c.sufijo}
+              </dt>
+              <dd>{c.titulo}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <nav class="wrap page-head__jump" aria-label="Líneas de producto">
+      <ul role="list">
+        {LINEAS.map((l) => <li><a href={`#linea-${l.n}`}><span class="num">{l.n}</span> {l.titulo}</a></li>)}
+      </ul>
+    </nav>
+  </header>
+
+  {
+    LINEAS.map((l, i) => (
+      <section class:list={['line-block', { 'line-block--alt': i % 2 === 1 }]} id={`linea-${l.n}`} aria-labelledby={`linea-${l.n}-t`}>
+        <div class="wrap grid line-block__grid">
+          <figure class="line-block__media framed reveal">
+            <div class="reveal-mask photo">
+              <Picture name={FOTOS[l.n].name} alt={FOTOS[l.n].alt} sizes="(min-width: 1024px) 34vw, 92vw" />
+            </div>
+          </figure>
+          <div class="line-block__body">
+            <p class="line-block__n num reveal">{l.n}</p>
+            <h2 id={`linea-${l.n}-t`} class="h2 line-block__title reveal">{l.titulo}</h2>
+            <p class="lead line-block__text reveal">{l.texto}</p>
+            <ul class="items" role="list">
+              {l.items.map((it, k) => (
+                <li class="items__item reveal" data-delay={(k % 3) * 60}>
+                  <span class="items__name">{it.nombre}</span>
+                  <span class="items__detail">{it.detalle}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="cta-band" aria-labelledby="cta-title">
+    <div class="wrap cta-band__inner">
+      <h2 id="cta-title" class="h2 cta-band__title">
+        <span>¿Necesita suministro</span>
+        <span class="cta-band__title-2">o maquila?</span>
+      </h2>
+      <a class="btn btn--gold" href="/#contacto">Contáctenos <Icon name="arrow" /></a>
+    </div>
+  </section>
+</Base>

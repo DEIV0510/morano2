@@ -1,0 +1,307 @@
+---
+import Base from '../layouts/Base.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import EmpresaLogo from '../components/EmpresaLogo.astro';
+import NoticiaCard from '../components/NoticiaCard.astro';
+import Contacto from '../components/Contacto.astro';
+import { EMPRESAS } from '../data/empresas.ts';
+import { CIFRAS, INTRO, LINEAS } from '../data/productos.ts';
+import { NOTICIAS } from '../lib/noticias.ts';
+import { HOME } from '../lib/site.ts';
+import map from '../data/map.json';
+
+const { width: MW, height: MH, points } = map;
+const co = points.colombia;
+const eu = points.europa;
+const us = points.usa;
+const arcEu = `M${co.x} ${co.y} C ${co.x + 120} ${co.y - 210}, ${eu.x - 230} ${eu.y - 120}, ${eu.x} ${eu.y}`;
+const arcUs = `M${co.x} ${co.y} C ${co.x - 40} ${co.y - 120}, ${us.x + 80} ${us.y - 40}, ${us.x} ${us.y}`;
+const presencia = [
+  { n: '01', nombre: 'Colombia', texto: 'Sede de Morano Gruppo en Santa Marta y operación industrial de sus empresas.' },
+  { n: '02', nombre: 'Europa', texto: 'Morano Europe: abastecimiento, representación comercial y distribución en la Unión Europea.' },
+  { n: '03', nombre: 'Estados Unidos', texto: 'Morano USA: importación, exportación y distribución mayorista en el continente americano.' },
+];
+const recientes = NOTICIAS.slice(0, 3);
+---
+
+<Base
+  title="Morano Gruppo | Aceites y grasas vegetales de palma — From Palm to the World"
+  description="Holding empresarial colombiano especializado en la producción, industrialización, envasado y comercialización internacional de aceites y grasas vegetales de palma."
+  path="/"
+  overlayHeader
+  showLoader
+>
+  <!-- Portada -->
+  <section class="hero" id="inicio" aria-labelledby="hero-title">
+    <div class="hero__media" data-parallax="0.12">
+      <Picture name="planta-tanques" alt="" sizes="100vw" class="hero__pic" priority />
+    </div>
+    <div class="hero__shade" aria-hidden="true"></div>
+    <div class="wrap hero__grid">
+      <div class="hero__content">
+        <p class="label hero__label">Morano Gruppo · Santa Marta, Colombia</p>
+        <h1 id="hero-title" class="display hero__title">
+          <span class="visually-hidden">Morano Gruppo — </span>
+          <span class="hero__line"><span>{HOME.heroTitulo[0]}</span></span>
+          <span class="hero__line"><span>{HOME.heroTitulo[1]}</span></span>
+        </h1>
+        <p class="lead hero__sub">{HOME.heroTexto}</p>
+        <div class="hero__ctas">
+          <a class="btn btn--gold" href="#empresas">Conozca nuestras empresas <Icon name="arrow" /></a>
+          <a class="btn btn--ghost" href="#contacto">Contáctenos</a>
+        </div>
+      </div>
+      <figure class="hero__inset">
+        <div class="framed hero__inset-frame">
+          <div class="photo"><Picture name="cultivo-palma" alt="Cultivo de palma de aceite con racimos cosechados" sizes="(min-width: 1024px) 22vw, 1px" /></div>
+        </div>
+        <figcaption>Origen: cultivo de palma</figcaption>
+      </figure>
+    </div>
+    <div class="wrap">
+      <div class="hero__foot">
+        <ul class="hero__trust" role="list">
+          <li>7 empresas</li>
+          <li>Colombia · Europa · Estados Unidos</li>
+          <li>Certificación ISCC EU</li>
+        </ul>
+        <p class="hero__caption">Planta del grupo · Colombia</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nosotros: industrias -->
+  <section class="section about" id="nosotros" aria-labelledby="about-title">
+    <div class="wrap grid about__grid">
+      <div class="about__text">
+        <p class="label reveal">Nosotros</p>
+        <h2 id="about-title" class="h2 reveal">
+          <span>Industrias que</span>
+          <span class="about__title-2">impulsamos.</span>
+        </h2>
+        <p class="lead reveal">{HOME.heroAmplia}</p>
+        <p class="muted reveal">{HOME.industriasTexto}</p>
+      </div>
+      <ol class="industries" role="list">
+        {
+          HOME.industrias.map((ind, i) => (
+            <li class="industries__item reveal" data-delay={(i % 4) * 70}>
+              <span class="industries__n num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="industries__name">{ind}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Misión y visión -->
+  <section class="purpose" aria-label="Misión y visión">
+    <div class="wrap purpose__grid">
+      <div class="purpose__item reveal">
+        <h2 class="purpose__h">Misión</h2>
+        <p class="purpose__text">{HOME.mision}</p>
+      </div>
+      <div class="purpose__item reveal" data-delay="120">
+        <h2 class="purpose__h">Visión</h2>
+        <p class="purpose__text">{HOME.vision}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empresas -->
+  <section class="section companies" id="empresas" aria-labelledby="companies-title">
+    <div class="wrap">
+      <div class="companies__head">
+        <p class="label reveal">Empresas del Gruppo</p>
+        <h2 id="companies-title" class="h2 reveal">
+          <span>Siete empresas,</span>
+          <span class="companies__title-2">una cadena de valor.</span>
+        </h2>
+      </div>
+      <ul class="companies__grid" role="list">
+        {
+          EMPRESAS.map((e, i) => (
+            <li class="company-card reveal" data-delay={(i % 4) * 80}>
+              <a class="company-card__link" href={`/${e.slug}/`}>
+                <div class="company-card__media photo">
+                  <Picture name={e.tarjeta} alt="" sizes="(min-width: 1180px) 23vw, (min-width: 700px) 46vw, 92vw" />
+                  <span class="company-card__logo">
+                    <EmpresaLogo empresa={e} />
+                  </span>
+                </div>
+                <p class="company-card__area">{e.area}</p>
+                <h3 class="company-card__name">{e.nombre}</h3>
+                <p class="company-card__text">{e.lema}</p>
+                <span class="company-card__more">
+                  Ver empresa <Icon name="arrow" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+        <li class="company-card company-card--cta reveal" data-delay="240">
+          <a class="company-card__link" href="/productos-y-soluciones/">
+            <span class="company-card__cta-n num">5</span>
+            <span class="company-card__cta-t">Líneas de producto, desde el aceite crudo hasta el producto terminado.</span>
+            <span class="company-card__more">
+              Productos y soluciones <Icon name="arrow" />
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Productos -->
+  <section class="section products-teaser" aria-labelledby="products-title">
+    <div class="wrap grid products-teaser__grid">
+      <div class="products-teaser__intro">
+        <p class="label reveal">Productos y soluciones</p>
+        <h2 id="products-title" class="h2 h2--md reveal">
+          <span>Del aceite crudo</span>
+          <span class="products-teaser__title-2">al producto terminado.</span>
+        </h2>
+        <p class="muted reveal">{INTRO}</p>
+        <dl class="figures reveal" data-count-wrap>
+          {
+            CIFRAS.map((c) => (
+              <div class="figures__item">
+                <dt class="figures__num num">
+                  <span data-count={c.valor}>{c.valor}</span>
+                  {c.sufijo}
+                </dt>
+                <dd>{c.titulo}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="btn btn--outline reveal" href="/productos-y-soluciones/">Ver productos y soluciones <Icon name="arrow" /></a>
+      </div>
+      <ol class="lines" role="list">
+        {
+          LINEAS.map((l, i) => (
+            <li class="reveal" data-delay={i * 70}>
+              <a class="lines__item" href={`/productos-y-soluciones/#linea-${l.n}`}>
+                <span class="lines__n num">{l.n}</span>
+                <span class="lines__body">
+                  <span class="lines__title">{l.titulo}</span>
+                  <span class="lines__text">{l.texto}</span>
+                </span>
+                <span class="lines__count num">{l.items.length}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Presencia -->
+  <section class="section connection" aria-labelledby="connection-title">
+    <div class="wrap">
+      <h2 id="connection-title" class="h2 connection__title reveal">
+        <span>From Palm</span>
+        <span class="connection__title-2">to the World.</span>
+      </h2>
+      <div class="connection__body">
+        <figure class="connection__map" data-map>
+          <img class="connection__dots" src="/img/mapa-puntos.svg" width={MW} height={MH} alt="" loading="lazy" decoding="async" />
+          <svg class="connection__routes" viewBox={`0 0 ${MW} ${MH}`} aria-hidden="true" focusable="false">
+            <path class="connection__arc-base" d={arcEu} />
+            <path class="connection__arc-base" d={arcUs} />
+            <path class="connection__arc" d={arcEu} pathLength="100" />
+            <path class="connection__arc connection__arc--2" d={arcUs} pathLength="100" />
+            {
+              [eu, us].map((p) => (
+                <g class="connection__waves">
+                  <circle cx={p.x} cy={p.y} r="26" />
+                  <circle cx={p.x} cy={p.y} r="26" />
+                </g>
+              ))
+            }
+            <circle class="connection__node connection__node--co" cx={co.x} cy={co.y} r="7" />
+            <circle class="connection__node connection__node--to" cx={eu.x} cy={eu.y} r="7" />
+            <circle class="connection__node connection__node--to" cx={us.x} cy={us.y} r="7" />
+          </svg>
+          <span class="connection__label connection__label--co"><span class="num">01</span> Colombia</span>
+          <span class="connection__label connection__label--eu"><span class="num">02</span> Europa</span>
+          <span class="connection__label connection__label--us"><span class="num">03</span> Estados Unidos</span>
+          <figcaption class="visually-hidden">Mapa estilizado: Morano Gruppo en Colombia conectado con Morano Europe y Morano USA.</figcaption>
+        </figure>
+        <ol class="connection__nodes" role="list">
+          {
+            presencia.map((p, i) => (
+              <li class="connection__item reveal" data-delay={i * 120}>
+                <span class="connection__n num">{p.n}</span>
+                <h3 class="h3">{p.nombre}</h3>
+                <p>{p.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sostenibilidad -->
+  <section class="section sustain" id="sostenibilidad" aria-labelledby="sustain-title">
+    <div class="wrap grid sustain__grid">
+      <figure class="sustain__photo framed reveal">
+        <div class="reveal-mask photo">
+          <Picture name="cosecha-racimo" alt="Trabajador del grupo con un racimo de palma recién cosechado" sizes="(min-width: 1024px) 36vw, 88vw" />
+        </div>
+      </figure>
+      <div class="sustain__text">
+        <p class="label reveal">Sostenibilidad y economía circular</p>
+        <h2 id="sustain-title" class="h2 h2--md reveal">
+          <span>Transformando recursos</span>
+          <span class="sustain__title-2">en valor sostenible.</span>
+        </h2>
+        <p class="lead reveal">{HOME.sostenibilidad}</p>
+        <ol class="axes" role="list">
+          {
+            HOME.ejes.map((e, i) => (
+              <li class="axes__item reveal" data-delay={(i % 2) * 90}>
+                <span class="axes__n num">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="axes__title">{e.titulo}</h3>
+                <p>{e.texto}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="iscc reveal">
+        <img class="iscc__seal" src="/img/iscc-520.webp" width="520" height="188" alt="ISCC Certificate Holder — International Sustainability & Carbon Certification" loading="lazy" decoding="async" />
+        <div class="iscc__body">
+          <h3 class="iscc__title">ISCC EU — International Sustainability and Carbon Certification</h3>
+          <p class="muted">{HOME.iscc}</p>
+        </div>
+        <ul class="iscc__list" role="list">
+          {HOME.isccPuntos.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Noticias -->
+  <section class="section news" aria-labelledby="news-title">
+    <div class="wrap">
+      <div class="news__head">
+        <div>
+          <p class="label reveal">Noticias</p>
+          <h2 id="news-title" class="h2 reveal">Actualidad del Gruppo</h2>
+        </div>
+        <a class="link reveal" href="/noticias/">Todas las noticias <Icon name="arrow" /></a>
+      </div>
+      <div class="news__grid">
+        {recientes.map((n, i) => <NoticiaCard n={n} delay={i * 90} />)}
+      </div>
+    </div>
+  </section>
+
+  <Contacto />
+</Base>
