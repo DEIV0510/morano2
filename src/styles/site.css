@@ -804,11 +804,8 @@
   background: linear-gradient(0deg, rgba(15, 14, 12, 0.82) 0%, rgba(15, 14, 12, 0.45) 45%, rgba(15, 14, 12, 0) 100%);
   pointer-events: none;
 }
-.company-card__media--aceite-el-tesoro::after {
-  display: none;
-}
 .company-card__media--aceite-el-tesoro img {
-  object-position: 50% 26%;
+  object-position: 50% 72%;
 }
 .company-card__logo {
   position: absolute;

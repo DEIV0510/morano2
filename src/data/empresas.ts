@@ -17,7 +17,6 @@ export interface Empresa {
   foto: Foto; // cabecera de su página
   tarjeta: Foto; // tarjeta de la portada
   destacada?: Foto; // imagen completa (vertical) en el cuerpo de su página
-  marcaEnFoto?: boolean; // la foto de la tarjeta ya muestra la marca: sin logotipo encima
   iscc?: boolean;
 }
 
@@ -133,7 +132,6 @@ export const EMPRESAS: Empresa[] = [
     foto: 'tesoro-anuncio',
     tarjeta: 'tesoro-anuncio',
     destacada: 'tesoro-anuncio',
-    marcaEnFoto: true,
   },
   {
     slug: 'famar',

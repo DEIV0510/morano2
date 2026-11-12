@@ -127,11 +127,9 @@ const recientes = NOTICIAS.slice(0, 3);
               <a class="company-card__link" href={`/${e.slug}/`}>
                 <div class={`company-card__media company-card__media--${e.slug} photo`}>
                   <Picture name={e.tarjeta} alt="" sizes="(min-width: 1180px) 23vw, (min-width: 700px) 46vw, 92vw" />
-                  {!e.marcaEnFoto && (
-                    <span class="company-card__logo">
-                      <EmpresaLogo empresa={e} />
-                    </span>
-                  )}
+                  <span class="company-card__logo">
+                    <EmpresaLogo empresa={e} />
+                  </span>
                 </div>
                 <p class="company-card__area">{e.area}</p>
                 <h3 class="company-card__name">{e.nombre}</h3>
