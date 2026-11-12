@@ -29,7 +29,18 @@ const year = new Date().getFullYear();
       </nav>
       <address class="site-footer__col site-footer__contact">
         <h2 class="site-footer__h">Contacto</h2>
-        <p><a href={SITE.mapsUrl} rel="noopener" target="_blank">{SITE.direccion}<br />{SITE.ciudad}</a></p>
+        {
+          SITE.sedes.map((s) => (
+            <p>
+              <span class="site-footer__place">{s.pais}</span>
+              <a href={s.maps} rel="noopener" target="_blank">
+                {s.lineas[0]}
+                <br />
+                {s.lineas[1]}
+              </a>
+            </p>
+          ))
+        }
         <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
         <p class="site-footer__social">
           <a href={SITE.instagramUrl} rel="noopener" target="_blank" aria-label="Instagram @moranogruppo"><Icon name="instagram" size={20} /> @{SITE.instagram}</a>
@@ -38,7 +49,7 @@ const year = new Date().getFullYear();
     </div>
     <div class="site-footer__bottom">
       <p>© {year} Morano Gruppo. Todos los derechos reservados.</p>
-      <p>Santa Marta · Colombia</p>
+      <p>Colombia · España · Estados Unidos</p>
     </div>
   </div>
 </footer>

@@ -11,6 +11,24 @@ export const SITE = {
   instagram: 'moranogruppo',
   instagramUrl: 'https://www.instagram.com/moranogruppo/',
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Edificio+Bahia+Centro+Carrera+1C+22-58+Santa+Marta+Colombia',
+  // Direcciones del grupo (contacto y pie). Datos enviados por el cliente.
+  sedes: [
+    {
+      pais: 'Colombia',
+      lineas: ['Cra 1 C No. 22-58, Edificio Bahía Centro', 'Santa Marta, Colombia'],
+      maps: 'https://www.google.com/maps/search/?api=1&query=Edificio+Bahia+Centro+Carrera+1C+22-58+Santa+Marta+Colombia',
+    },
+    {
+      pais: 'España',
+      lineas: ['Paseo de la Castellana, 200', 'Madrid 28046, España'],
+      maps: 'https://www.google.com/maps/search/?api=1&query=Paseo+de+la+Castellana+200+28046+Madrid',
+    },
+    {
+      pais: 'Estados Unidos',
+      lineas: ['7901 4th St N, STE 300', 'St. Petersburg, FL 33702'],
+      maps: 'https://www.google.com/maps/search/?api=1&query=7901+4th+St+N+STE+300+St.+Petersburg+FL+33702',
+    },
+  ],
 };
 
 export const NAV = [

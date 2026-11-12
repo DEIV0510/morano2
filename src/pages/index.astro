@@ -16,11 +16,11 @@ const co = points.colombia;
 const eu = points.europa;
 const us = points.usa;
 const arcEu = `M${co.x} ${co.y} C ${co.x + 120} ${co.y - 210}, ${eu.x - 230} ${eu.y - 120}, ${eu.x} ${eu.y}`;
-const arcUs = `M${co.x} ${co.y} C ${co.x - 40} ${co.y - 120}, ${us.x + 80} ${us.y - 40}, ${us.x} ${us.y}`;
+const arcUs = `M${co.x} ${co.y} C ${co.x - 6} ${co.y - 60}, ${us.x + 30} ${us.y - 34}, ${us.x} ${us.y}`;
 const presencia = [
   { n: '01', nombre: 'Colombia', texto: 'Sede de Morano Gruppo en Santa Marta y operación industrial de sus empresas.' },
-  { n: '02', nombre: 'Europa', texto: 'Morano Europe: abastecimiento, representación comercial y distribución en la Unión Europea.' },
-  { n: '03', nombre: 'Estados Unidos', texto: 'Morano USA: importación, exportación y distribución mayorista en el continente americano.' },
+  { n: '02', nombre: 'Europa', texto: 'Morano Europe, en Madrid: abastecimiento, representación comercial y distribución en la Unión Europea.' },
+  { n: '03', nombre: 'Estados Unidos', texto: 'Morano USA, en St. Petersburg (Florida): importación, exportación y distribución mayorista en el continente americano.' },
 ];
 const recientes = NOTICIAS.slice(0, 3);
 ---

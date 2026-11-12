@@ -16,10 +16,20 @@ import { SITE } from '../lib/site.ts';
         </h2>
         <p class="contact__intro reveal">Escríbanos para conocer nuestras empresas, productos y soluciones.</p>
         <dl class="contact__list reveal">
-          <div>
-            <dt>Dirección</dt>
-            <dd><a href={SITE.mapsUrl} rel="noopener" target="_blank">{SITE.direccion}<br />{SITE.ciudad}</a></dd>
-          </div>
+          {
+            SITE.sedes.map((s) => (
+              <div>
+                <dt>{s.pais}</dt>
+                <dd>
+                  <a href={s.maps} rel="noopener" target="_blank">
+                    {s.lineas[0]}
+                    <br />
+                    {s.lineas[1]}
+                  </a>
+                </dd>
+              </div>
+            ))
+          }
           <div>
             <dt>Correo</dt>
             <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
