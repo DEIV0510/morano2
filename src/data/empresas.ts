@@ -16,6 +16,7 @@ export interface Empresa {
   pilares: { titulo: string; texto: string }[];
   foto: Foto; // cabecera de su página
   tarjeta: Foto; // tarjeta de la portada
+  tarjetaVertical?: boolean; // foto 9:16 completa: ocupa dos filas del mosaico
   destacada?: Foto; // imagen completa (vertical) en el cuerpo de su página
   iscc?: boolean;
 }
@@ -131,6 +132,7 @@ export const EMPRESAS: Empresa[] = [
     ],
     foto: 'tesoro-anuncio',
     tarjeta: 'tesoro-anuncio',
+    tarjetaVertical: true,
     destacada: 'tesoro-anuncio',
   },
   {

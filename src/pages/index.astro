@@ -120,36 +120,29 @@ const recientes = NOTICIAS.slice(0, 3);
           <span class="companies__title-2">una cadena de valor.</span>
         </h2>
       </div>
+      {/* Mosaico: las filas se calculan para que la tarjeta vertical (El Tesoro,
+          9:16 completa) mida justo dos filas. */}
       <ul class="companies__grid" role="list">
         {
           EMPRESAS.map((e, i) => (
-            <li class="company-card reveal" data-delay={(i % 4) * 80}>
-              <a class="company-card__link" href={`/${e.slug}/`}>
-                <div class={`company-card__media company-card__media--${e.slug} photo`}>
-                  <Picture name={e.tarjeta} alt="" sizes="(min-width: 1180px) 23vw, (min-width: 700px) 46vw, 92vw" />
-                  <span class="company-card__logo">
-                    <EmpresaLogo empresa={e} />
+            <li class:list={['company-tile reveal', { 'company-tile--tall': e.tarjetaVertical }]} data-delay={(i % 4) * 80}>
+              <a class="company-tile__link" href={`/${e.slug}/`}>
+                <h3 class="visually-hidden">{e.nombre}</h3>
+                <span class="company-tile__media">
+                  <Picture name={e.tarjeta} alt="" sizes={e.tarjetaVertical ? '(min-width: 1180px) 23vw, 46vw' : '(min-width: 1180px) 23vw, (min-width: 700px) 46vw, 46vw'} />
+                </span>
+                <span class="company-tile__area">{e.area}</span>
+                <span class="company-tile__foot">
+                  <span class="company-tile__lema">{e.lema}</span>
+                  <span class="company-tile__brand">
+                    <EmpresaLogo empresa={e} decorativo />
+                    <Icon name="arrow" />
                   </span>
-                </div>
-                <p class="company-card__area">{e.area}</p>
-                <h3 class="company-card__name">{e.nombre}</h3>
-                <p class="company-card__text">{e.lema}</p>
-                <span class="company-card__more">
-                  Ver empresa <Icon name="arrow" />
                 </span>
               </a>
             </li>
           ))
         }
-        <li class="company-card company-card--cta reveal" data-delay="240">
-          <a class="company-card__link" href="/productos-y-soluciones/">
-            <span class="company-card__cta-n num">5</span>
-            <span class="company-card__cta-t">Etapas de la cadena de valor, desde el aceite crudo hasta el producto terminado.</span>
-            <span class="company-card__more">
-              Productos y soluciones <Icon name="arrow" />
-            </span>
-          </a>
-        </li>
       </ul>
     </div>
   </section>

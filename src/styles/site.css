@@ -769,183 +769,175 @@
 .companies__head .h2 {
   display: grid;
 }
+/* Mosaico de empresas. Cada fila mide la mitad de una columna en 9:16 (menos el
+   espacio entre filas): así la tarjeta vertical de El Tesoro, que ocupa dos
+   filas, se ve completa y las demás encajan sin huecos. */
+.companies .wrap {
+  container-type: inline-size;
+}
 .companies__grid {
+  --cols: 4;
+  --gap: 16px;
+  --col-w: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols));
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(28px, 3vw, 44px) var(--col-gap);
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-auto-rows: calc((var(--col-w) * 16 / 9 - var(--gap)) / 2);
+  grid-auto-flow: row dense;
+  gap: var(--gap);
   margin: 0;
   padding: 0;
 }
-.company-card__link {
-  display: grid;
-  height: 100%;
-  align-content: start;
+.company-tile {
+  position: relative;
+  min-width: 0;
+}
+.company-tile--tall {
+  grid-column: var(--cols) / span 1;
+  grid-row: 1 / span 2;
+}
+.company-tile__link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  color: var(--white);
   text-decoration: none;
+  background: var(--black-900);
+  isolation: isolate;
 }
-.company-card__media {
-  aspect-ratio: 1 / 1;
-  margin-bottom: 20px;
+.company-tile__media,
+.company-tile__media picture {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
 }
-.company-card__media img {
-  transition: transform 1.2s var(--ease-out);
+.company-tile__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.4s var(--ease-out);
 }
-@media (hover: hover) {
-  .company-card__link:hover .company-card__media img {
-    transform: scale(1.05);
-  }
-}
-/* Logotipo sobre la foto: sin recuadro, en blanco, sobre un degradado oscuro */
-.company-card__media::after {
+.company-tile__link::before {
   content: '';
   position: absolute;
-  inset: auto 0 0 0;
-  z-index: 0;
-  height: 52%;
-  background: linear-gradient(0deg, rgba(15, 14, 12, 0.82) 0%, rgba(15, 14, 12, 0.45) 45%, rgba(15, 14, 12, 0) 100%);
-  pointer-events: none;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(15, 14, 12, 0.55) 0%, rgba(15, 14, 12, 0) 26%),
+    linear-gradient(0deg, rgba(15, 14, 12, 0.86) 0%, rgba(15, 14, 12, 0.35) 42%, rgba(15, 14, 12, 0) 66%);
+  transition: background-color var(--t-med) var(--ease-out);
 }
-/* El Tesoro: la foto vertical completa, sin recortes ni laterales */
-.company-card__media--aceite-el-tesoro {
-  aspect-ratio: 9 / 16;
-}
-.company-card__logo {
+.company-tile__area {
   position: absolute;
+  top: 16px;
   left: 18px;
-  bottom: 18px;
-  z-index: 1;
-  display: block;
-  width: 72%;
-}
-.company-card__logo .empresa-logo {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: 38px;
-  filter: brightness(0) invert(1);
-}
-.company-card__area {
+  right: 18px;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.18em;
+  line-height: 1.5;
   text-transform: uppercase;
-  color: var(--gold-ink);
+  color: rgba(255, 255, 255, 0.86);
 }
-.company-card__name {
-  margin-top: 8px;
-  font-size: 1.375rem;
-  font-weight: 500;
-  line-height: 1.2;
+.company-tile__foot {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 12px;
 }
-.company-card__text {
-  margin-top: 8px;
+.company-tile__lema {
+  max-width: 30ch;
   font-size: var(--fs-small);
-  line-height: 1.55;
-  color: var(--gray-ink);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.86);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
 }
-.company-card__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.company-tile__brand {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
 }
-.company-card__more .arrow {
+.company-tile__brand .empresa-logo {
+  display: block;
+  width: auto;
+  max-width: 78%;
+  height: auto;
+  max-height: 36px;
+  filter: brightness(0) invert(1);
+}
+.company-tile__brand .arrow {
+  flex: none;
+  margin-bottom: 4px;
+  color: var(--gold-light);
   transition: transform var(--t-med) var(--ease-out);
 }
 @media (hover: hover) {
-  .company-card__link:hover .company-card__more .arrow {
+  .company-tile__link:hover img {
+    transform: scale(1.05);
+  }
+  .company-tile__link:hover::before {
+    background-color: rgba(15, 14, 12, 0.32);
+  }
+  .company-tile__link:hover .company-tile__lema {
+    opacity: 1;
+    transform: none;
+  }
+  .company-tile__link:hover .arrow {
     transform: translateX(5px);
   }
-  .company-card__link:hover .company-card__name {
-    text-decoration: underline;
-    text-decoration-color: var(--gold);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 6px;
-  }
 }
-/* El recuadro oscuro ocupa todo el alto de su fila (la de El Tesoro es más alta). */
-.company-card--cta {
-  display: flex;
-}
-.company-card--cta .company-card__link {
-  flex: 1;
-  aspect-ratio: auto;
-  min-height: 0;
-  height: auto;
-  align-content: end;
-  gap: 18px;
-  padding: clamp(22px, 2.4vw, 32px);
-  background: var(--black);
-  color: var(--white);
-}
-.company-card__cta-n {
-  font-size: clamp(4rem, 7vw, 6.4rem);
-  font-weight: 300;
-  line-height: 0.9;
-  color: var(--gold-light);
-}
-.company-card__cta-t {
-  font-size: 1.125rem;
-  line-height: 1.4;
-  max-width: 24ch;
-}
-.company-card--cta .company-card__more {
-  border-top-color: rgba(255, 255, 255, 0.2);
+.company-tile__link:focus-visible {
+  outline-offset: -3px;
 }
 @media (max-width: 1179px) {
   .companies__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --cols: 2;
+  }
+  .company-tile--tall {
+    grid-column: 2 / span 1;
+    grid-row: 3 / span 2;
   }
 }
-/* Celular: dos columnas y sin el lema, para que la portada no se alargue */
 @media (max-width: 640px) {
   .companies__grid {
-    gap: 28px 12px;
+    --gap: 10px;
   }
-  .company-card__media {
-    margin-bottom: 12px;
-  }
-  .company-card__logo {
+  .company-tile__area {
+    top: 10px;
     left: 10px;
-    bottom: 10px;
-    width: 80%;
-  }
-  .company-card__logo .empresa-logo {
-    max-height: 26px;
-  }
-  .company-card__area {
+    right: 10px;
     font-size: 0.5625rem;
     letter-spacing: 0.12em;
   }
-  .company-card__name {
-    margin-top: 4px;
-    font-size: 1.0625rem;
+  .company-tile__foot {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
   }
-  .company-card__text {
+  .company-tile__lema {
     display: none;
   }
-  .company-card__more {
-    margin-top: 10px;
-    padding-top: 10px;
-    font-size: 0.625rem;
-    letter-spacing: 0.12em;
+  .company-tile__brand .empresa-logo {
+    max-height: 24px;
   }
-  .company-card--cta .company-card__link {
-    min-height: 0;
-    gap: 10px;
-    padding: 16px;
+  .company-tile__brand .arrow {
+    display: none;
   }
-  .company-card__cta-n {
-    font-size: 3rem;
+}
+/* Sin unidades de contenedor: filas con proporción fija (aproximada). */
+@supports not (width: 1cqw) {
+  .companies__grid {
+    grid-auto-rows: auto;
   }
-  .company-card__cta-t {
-    font-size: 0.875rem;
+  .company-tile {
+    aspect-ratio: 9 / 8;
+  }
+  .company-tile--tall {
+    aspect-ratio: auto;
   }
 }
 
