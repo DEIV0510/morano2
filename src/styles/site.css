@@ -58,8 +58,9 @@
   display: block;
   flex: none;
 }
+/* Logotipo apilado (marca arriba, nombre abajo): 72 px de alto en escritorio */
 .site-header__logo {
-  width: clamp(190px, 16vw, 236px);
+  width: 123px;
 }
 .site-nav {
   margin-left: auto;
@@ -221,13 +222,13 @@
 }
 @media (max-width: 760px) {
   :root {
-    --header-h: 64px;
+    --header-h: 72px;
   }
   .site-header__cta {
     display: none;
   }
   .site-header__logo {
-    width: 178px;
+    width: 99px;
   }
 }
 
@@ -259,7 +260,7 @@
   justify-content: space-between;
 }
 .menu__logo {
-  width: 178px;
+  width: 99px;
 }
 .menu__nav {
   flex: 1;
@@ -363,17 +364,18 @@
 }
 .loader__inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 2.4vw, 28px);
+  gap: clamp(12px, 1.4vw, 16px);
 }
 .loader__mark {
-  width: clamp(70px, 9vw, 104px);
+  width: clamp(86px, 10.7vw, 129px);
   height: auto;
   clip-path: polygon(0 0, 0 0, 0 0);
   animation: mark-in 900ms var(--ease-io) 80ms forwards;
 }
 .loader__word {
-  width: clamp(170px, 26vw, 320px);
+  width: clamp(160px, 20vw, 240px);
   height: auto;
   clip-path: inset(0 100% 0 0);
   animation: wipe 760ms var(--ease-io) 520ms forwards;
@@ -792,27 +794,37 @@
     transform: scale(1.05);
   }
 }
+/* Logotipo sobre la foto: sin recuadro, en blanco, sobre un degradado oscuro */
+.company-card__media::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 0;
+  height: 52%;
+  background: linear-gradient(0deg, rgba(15, 14, 12, 0.82) 0%, rgba(15, 14, 12, 0.45) 45%, rgba(15, 14, 12, 0) 100%);
+  pointer-events: none;
+}
+.company-card__media--aceite-el-tesoro::after {
+  display: none;
+}
+.company-card__media--aceite-el-tesoro img {
+  object-position: 50% 26%;
+}
 .company-card__logo {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  display: grid;
-  place-items: center start;
-  height: 64px;
-  max-width: 88%;
-  padding: 12px 16px;
-  background: var(--white);
+  left: 18px;
+  bottom: 18px;
+  z-index: 1;
+  display: block;
+  width: 72%;
 }
 .company-card__logo .empresa-logo {
+  display: block;
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 40px;
-}
-.company-card__logo .empresa-logo--morano-europe,
-.company-card__logo .empresa-logo--morano-usa,
-.company-card__logo .empresa-logo--cimotrade {
-  max-height: 22px;
+  max-height: 38px;
+  filter: brightness(0) invert(1);
 }
 .company-card__area {
   font-size: 0.6875rem;
@@ -900,16 +912,12 @@
     margin-bottom: 12px;
   }
   .company-card__logo {
-    height: 40px;
-    padding: 7px 10px;
+    left: 10px;
+    bottom: 10px;
+    width: 80%;
   }
   .company-card__logo .empresa-logo {
-    max-height: 24px;
-  }
-  .company-card__logo .empresa-logo--morano-europe,
-  .company-card__logo .empresa-logo--morano-usa,
-  .company-card__logo .empresa-logo--cimotrade {
-    max-height: 13px;
+    max-height: 26px;
   }
   .company-card__area {
     font-size: 0.5625rem;
@@ -1618,7 +1626,7 @@
   padding-bottom: 64px;
 }
 .site-footer__logo {
-  width: 236px;
+  width: 190px;
 }
 .site-footer__desc {
   margin-top: 26px;
@@ -1901,10 +1909,38 @@
   font-size: var(--fs-small);
   color: var(--gray-ink);
 }
+/* Empresa con imagen destacada (El Tesoro): imagen vertical a la derecha */
+.co-body__feature {
+  grid-column: 8 / -1;
+  grid-row: 1 / span 2;
+  --frame-x: 16px;
+  --frame-y: 16px;
+}
+.co-body__feature .photo {
+  aspect-ratio: 9 / 16;
+}
+.pillars--wide {
+  grid-column: 1 / span 6;
+  grid-row: 2;
+}
+.co-body__grid:has(.co-body__feature) {
+  grid-template-rows: auto 1fr;
+  row-gap: 48px;
+}
+.co-hero--aceite-el-tesoro .co-hero__media img {
+  object-position: 50% 100%;
+}
 @media (max-width: 1023px) {
   .co-body__intro,
-  .pillars {
+  .pillars,
+  .pillars--wide {
     grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .co-body__feature {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    width: min(100%, 420px);
   }
 }
 .others {

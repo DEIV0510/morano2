@@ -16,6 +16,8 @@ export interface Empresa {
   pilares: { titulo: string; texto: string }[];
   foto: Foto; // cabecera de su página
   tarjeta: Foto; // tarjeta de la portada
+  destacada?: Foto; // imagen completa (vertical) en el cuerpo de su página
+  marcaEnFoto?: boolean; // la foto de la tarjeta ya muestra la marca: sin logotipo encima
   iscc?: boolean;
 }
 
@@ -118,19 +120,20 @@ export const EMPRESAS: Empresa[] = [
     web: 'www.aceiteeltesoro.com',
     webUrl: 'https://aceiteeltesoro.com/',
     area: 'Marca de consumo',
-    lema: 'Pureza, tradición y sabor excepcional en cada gota',
-    // La web actual lo describe como aceite de oliva; su etiqueta, su web y la
-    // prensa (Cubadebate) lo presentan como aceite vegetal refinado. Pendiente de
-    // confirmar con el cliente; mientras, solo lo documentado.
+    // Textos de la etiqueta nueva (2026-11): «Aceite Vegetal Extra Fino · 100 % Palma».
+    // La web anterior decía aceite de oliva: era un error.
+    lema: 'El sabor de lo bien hecho',
     descripcion:
-      'Aceite El Tesoro es la marca insignia de aceite vegetal del grupo: un aceite refinado que llega a la mesa y a la cocina profesional con el respaldo del sistema productivo y logístico de Morano Gruppo.',
+      'Aceite El Tesoro es el aceite vegetal extra fino del grupo, 100 % palma: para freír, cocinar y hornear, en casa y en la cocina profesional, con el respaldo del sistema productivo y logístico de Morano Gruppo.',
     pilares: [
-      { titulo: 'Aceite vegetal refinado', texto: 'Estabilidad y rendimiento para la cocina del hogar y la cocina profesional.' },
+      { titulo: 'Ideal para freír', texto: 'Alto punto de humo: fríe, cocina y hornea.' },
+      { titulo: 'Libre de colesterol', texto: 'Aceite vegetal extra fino, 100 % palma.' },
       { titulo: 'Formatos de presentación', texto: 'Botellas y garrafas pensadas tanto para el sector HORECA (hoteles, restaurantes y catering) como para el canal retail y el consumo en el hogar.' },
-      { titulo: 'Respaldo del grupo', texto: 'Producción, envasado y logística integrados en las empresas de Morano Gruppo.' },
     ],
-    foto: 'tesoro-linea',
-    tarjeta: 'tesoro-mesa',
+    foto: 'tesoro-anuncio',
+    tarjeta: 'tesoro-anuncio',
+    destacada: 'tesoro-anuncio',
+    marcaEnFoto: true,
   },
   {
     slug: 'famar',

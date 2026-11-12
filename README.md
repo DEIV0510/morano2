@@ -15,7 +15,7 @@ Las direcciones son las mismas que en la web actual (`/morano-oleo/`, `/producto
 | Productos y soluciones | [src/data/productos.ts](src/data/productos.ts) |
 | Noticias | [src/data/noticias.json](src/data/noticias.json) (se genera con `npm run noticias`) |
 | Fotos | originales en `Desktop\MATERIAL-CLIENTES\morano-gruppo\web-actual` → registrar en `scripts/build-images.mjs` → `npm run images` |
-| Logotipo (versiones horizontal y para fondo oscuro) | `_material/logo-morano-gruppo.png` → `npm run brand` |
+| Logotipo (versión para fondo claro y para fondo oscuro) | `_material/logo-morano-gruppo.png` → `npm run brand` |
 
 ## En local
 
@@ -32,4 +32,5 @@ npm run check      # revisa tipos
 - El formulario de contacto abre el correo con el mensaje redactado para info@moranogruppo.com (la web no guarda datos).
 - Las notas de prensa ajenas (Semana, Caracol Radio, Cubadebate, Opinión Caribe) se muestran con un resumen propio y el enlace a la fuente, sin copiar el artículo.
 - moranoleo.com no responde: se muestra como texto, sin enlace.
-- **Pendiente de confirmar:** la web actual describe Aceite El Tesoro como aceite de oliva, pero su etiqueta, su web (aceiteeltesoro.com) y la prensa lo presentan como aceite vegetal. Aquí se usa «aceite vegetal».
+- Aceite El Tesoro: textos de la etiqueta nueva (2026-11): aceite vegetal extra fino, 100 % palma. La web anterior lo describía como aceite de oliva por error.
+- Logotipo del grupo siempre completo: marca arriba y nombre abajo. Los logotipos de las empresas van sin fondo; sobre las fotos de la portada, en blanco.

@@ -68,7 +68,7 @@
   --maxw: 1440px;
   --col-gap: clamp(16px, 2vw, 32px);
   --section: clamp(72px, 8vw, 124px);
-  --header-h: 78px;
+  --header-h: 92px;
 
   /* Movimiento */
   --ease-out: cubic-bezier(0.16, 0.84, 0.24, 1);

@@ -7,7 +7,7 @@ export interface Linea {
 }
 
 export const CIFRAS = [
-  { valor: 5, sufijo: '', titulo: 'Líneas de producto' },
+  { valor: 5, sufijo: '', titulo: 'Etapas de la cadena de valor' },
   { valor: 30, sufijo: '', titulo: 'Productos y servicios' },
   { valor: 100, sufijo: '%', titulo: 'Servicio integral' },
 ];

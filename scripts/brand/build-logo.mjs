@@ -3,7 +3,7 @@
 // solo se recorta, se reordena y se cambia el negro por marfil en la versión
 // para fondos oscuros.
 //
-//   public/brand/gruppo-h.png / gruppo-h-reverse.png   marca + nombre en horizontal (cabecera, pie)
+//   public/brand/gruppo-v.png / gruppo-v-reverse.png   logotipo completo: marca arriba, nombre abajo
 //   public/brand/gruppo-mark.png / -reverse.png        solo la marca (pantalla de carga)
 //   public/brand/gruppo-word-reverse.png               solo el nombre (pantalla de carga)
 //   public/brand/gruppo.png                            logotipo original (JSON-LD)
@@ -63,28 +63,24 @@ const variants = {
 };
 
 const png = (img) => img.png({ compressionLevel: 9, adaptiveFiltering: true });
+// Logotipo completo tal cual (marca arriba, nombre abajo), recortado al contenido.
+const left = Math.min(markBox.left, wordBox.left);
+const top = markBox.top;
+const fullBox = {
+  left,
+  top,
+  width: Math.max(markBox.left + markBox.width, wordBox.left + wordBox.width) - left,
+  height: wordBox.top + wordBox.height - top,
+};
 for (const [suffix, img] of Object.entries(variants)) {
+  const full = await img.clone().extract(fullBox).png().toBuffer();
   const mark = await img.clone().extract(markBox).png().toBuffer();
   const word = await img.clone().extract(wordBox).png().toBuffer();
-  // Horizontal: la marca mide 2,4 veces el alto del nombre.
-  const wordH = wordBox.height;
-  const markH = Math.round(wordH * 2.4);
-  const markW = Math.round((markBox.width * markH) / markBox.height);
-  const gap = Math.round(wordH * 0.7);
-  const width = markW + gap + wordBox.width;
-  const lock = await sharp({ create: { width, height: markH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-    .composite([
-      { input: await sharp(mark).resize({ height: markH }).png().toBuffer(), left: 0, top: 0 },
-      { input: word, left: markW + gap, top: Math.round((markH - wordH) / 2) },
-    ])
-    .png()
-    .toBuffer();
-  // Cabecera a ~44 px de alto: se guarda a 3x.
-  await png(sharp(lock).resize({ height: 132 })).toFile(join(OUT, `gruppo-h${suffix}.png`));
+  // Cabecera a ~72 px de alto y pie a ~120 px: se guarda a 2–3x.
+  await png(sharp(full).resize({ height: 260 })).toFile(join(OUT, `gruppo-v${suffix}.png`));
   await png(sharp(mark).resize({ height: 240 })).toFile(join(OUT, `gruppo-mark${suffix}.png`));
   if (suffix) await png(sharp(word).resize({ height: 60 })).toFile(join(OUT, `gruppo-word${suffix}.png`));
-  const meta = await sharp(lock).resize({ height: 132 }).toBuffer({ resolveWithObject: true });
-  console.log(`gruppo-h${suffix}.png ${meta.info.width}×${meta.info.height}`);
+  console.log(`gruppo-v${suffix}.png`);
 }
 await png(sharp(SRC)).toFile(join(OUT, 'gruppo.png'));
 
@@ -101,7 +97,7 @@ for (const [name, size] of [['favicon-32.png', 32], ['apple-touch-icon.png', 180
 
 // Proporciones para el HTML (width/height de las <img>).
 const dims = {};
-for (const f of ['gruppo-h', 'gruppo-h-reverse', 'gruppo-mark-reverse', 'gruppo-word-reverse']) {
+for (const f of ['gruppo-v', 'gruppo-v-reverse', 'gruppo-mark-reverse', 'gruppo-word-reverse']) {
   const m = await sharp(join(OUT, `${f}.png`)).metadata();
   dims[f] = { width: m.width, height: m.height };
 }

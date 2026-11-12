@@ -55,7 +55,7 @@ const ogImage = e ? `/img/${e.foto}-${images[e.foto].widths.at(-1)}.jpg` : n ? `
       current={path}
       jsonLd={[breadcrumb([['Inicio', '/'], ['Empresas', '/#empresas'], [e.nombre, path]])]}
     >
-      <section class="co-hero" aria-labelledby="co-title">
+      <section class={`co-hero co-hero--${e.slug}`} aria-labelledby="co-title">
         <div class="co-hero__media">
           <Picture name={e.foto} alt="" sizes="100vw" priority />
         </div>
@@ -89,7 +89,14 @@ const ogImage = e ? `/img/${e.foto}-${images[e.foto].widths.at(-1)}.jpg` : n ? `
               )}
             </p>
           </div>
-          <ol class="pillars" role="list">
+          {e.destacada && (
+            <figure class="co-body__feature framed reveal">
+              <div class="reveal-mask photo">
+                <Picture name={e.destacada} alt={`${e.nombre}: botella con la etiqueta actual`} sizes="(min-width: 1024px) 34vw, 92vw" />
+              </div>
+            </figure>
+          )}
+          <ol class:list={['pillars', { 'pillars--wide': e.destacada }]} role="list">
             {e.pilares.map((p, i) => (
               <li class="pillars__item reveal" data-delay={i * 90}>
                 <span class="pillars__n num">{String(i + 1).padStart(2, '0')}</span>

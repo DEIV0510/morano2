@@ -31,7 +31,6 @@ const PHOTOS = {
   'card-famar': ['2026_08_WhatsApp-Image-2026-08-06-at-23.03.28.jpeg', 'foto'],
   // Páginas de cada empresa
   'oleo-planta': ['2026_08_MORANO-OLEO.jpeg', 'foto'],
-  'tesoro-linea': ['2025_03_WhatsApp-Image-2025-03-06-at-10.14.42.jpeg', 'foto'],
   'bio-fruto': ['2025_12_92da8a_e405100a3cb44699bd90ce3f1e629e14mv2-scaled.avif', 'foto'],
   'bio-envasado': ['2026_08_WhatsApp-Image-2026-07-17-at-22.26.07-2.jpeg', 'foto'],
   'motrade-planta': ['2026_06_WhatsApp-Image-2026-06-25-at-20.32.05-scaled.jpeg', 'foto'],
@@ -40,7 +39,8 @@ const PHOTOS = {
   'usa-bodega': ['2026_08_WhatsApp-Image-2026-08-06-at-22.58.26.jpeg', 'foto'],
   // Productos y soluciones
   'racimo': ['2025_02_WhatsApp-Image-2025-02-26-at-13.05.59-3-scaled.jpeg', 'foto'],
-  'tesoro-mesa': ['2025_12_PHOTO-2025-06-19-11-01-30-580x870-1.jpg', 'foto'],
+  // Etiqueta nueva de El Tesoro (enviada por el cliente el 2026-11-11)
+  'tesoro-anuncio': ['el-tesoro-etiqueta-nueva-2026-11.jpeg', 'foto'],
   // Noticias (imagen destacada de cada una)
   'n-india': ['2026_09_KYOIMB5QWRFLPNECO5XYQYI6GY.avif', 'noticia'],
   'n-semana': ['2026_09_LBXME2WMX5AXPCUC3TMU7R3HKM.avif', 'noticia'],
@@ -79,7 +79,7 @@ for (const [name, [file, kind]] of Object.entries(PHOTOS)) {
   console.log(name, `${width}×${height}`, widths.join('/'));
 }
 
-// Logotipos de las empresas: tal cual, a 2x del tamaño de uso, en WebP y PNG.
+// Logotipos de las empresas: sin fondo, a 2x del tamaño de uso, en WebP y PNG.
 const LOGOS = {
   'logo-oleo': '2026_08_Logo-Morano-Oleo-Planta-de-beneficio-sin-fondo-scaled-1.webp',
   'logo-tesoro': '2025_02_Logo-El-tesoro.webp',
@@ -89,10 +89,23 @@ const LOGOS = {
   'logo-usa': '2026_08_cropped-LOGO-PNG-MORANO-USA.webp',
 };
 const logos = {};
+// Fondo transparente: los que vienen sobre blanco (Motrade, USA) pierden el blanco
+// (alfa según la distancia al blanco), para poder ir sobre la foto en las tarjetas.
+async function sinFondo(input) {
+  const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const W = info.width, H = info.height;
+  const opaca = [0, W - 1, (H - 1) * W, H * W - 1].some((i) => data[i * 4 + 3] > 200);
+  if (!opaca) return sharp(input).png().toBuffer();
+  for (let i = 0; i < data.length; i += 4) {
+    const d = Math.max(255 - data[i], 255 - data[i + 1], 255 - data[i + 2]);
+    data[i + 3] = Math.round(data[i + 3] * Math.max(0, Math.min(1, (d - 12) / 60)));
+  }
+  return sharp(data, { raw: { width: W, height: H, channels: 4 } }).png().toBuffer();
+}
 for (const [name, file] of Object.entries(LOGOS)) {
   const input = join(SRC, file);
   if (!existsSync(input)) throw new Error(`Falta el logotipo: ${file}`);
-  const img = sharp(input).trim({ threshold: 12 });
+  const img = sharp(await sinFondo(input)).trim({ threshold: 12 });
   const buf = await img.resize({ width: 720, height: 240, fit: 'inside', withoutEnlargement: true }).png().toBuffer();
   const m = await sharp(buf).metadata();
   await sharp(buf).webp({ quality: 92, alphaQuality: 100 }).toFile(join(OUT, `${name}.webp`));
@@ -112,7 +125,7 @@ await sharp(join(SRC, '2026_08_Certification_Holder_Banner_BLACK_positive_RGB.we
   .toFile(join(OUT, 'iscc-520.webp'));
 
 // Imagen para redes (1200×630): foto + sombra cálida + logotipo para fondo oscuro.
-const lock = await sharp(join(root, 'public', 'brand', 'gruppo-h-reverse.png')).resize({ width: 640 }).png().toBuffer();
+const lock = await sharp(join(root, 'public', 'brand', 'gruppo-v-reverse.png')).resize({ height: 300 }).png().toBuffer();
 const lockMeta = await sharp(lock).metadata();
 const shade = Buffer.from(
   `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0F0E0C" stop-opacity=".93"/><stop offset=".65" stop-color="#0F0E0C" stop-opacity=".8"/><stop offset="1" stop-color="#0F0E0C" stop-opacity=".35"/></linearGradient></defs><rect width="1200" height="630" fill="url(#g)"/></svg>`

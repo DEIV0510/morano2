@@ -125,11 +125,13 @@ const recientes = NOTICIAS.slice(0, 3);
           EMPRESAS.map((e, i) => (
             <li class="company-card reveal" data-delay={(i % 4) * 80}>
               <a class="company-card__link" href={`/${e.slug}/`}>
-                <div class="company-card__media photo">
+                <div class={`company-card__media company-card__media--${e.slug} photo`}>
                   <Picture name={e.tarjeta} alt="" sizes="(min-width: 1180px) 23vw, (min-width: 700px) 46vw, 92vw" />
-                  <span class="company-card__logo">
-                    <EmpresaLogo empresa={e} />
-                  </span>
+                  {!e.marcaEnFoto && (
+                    <span class="company-card__logo">
+                      <EmpresaLogo empresa={e} />
+                    </span>
+                  )}
                 </div>
                 <p class="company-card__area">{e.area}</p>
                 <h3 class="company-card__name">{e.nombre}</h3>
@@ -144,7 +146,7 @@ const recientes = NOTICIAS.slice(0, 3);
         <li class="company-card company-card--cta reveal" data-delay="240">
           <a class="company-card__link" href="/productos-y-soluciones/">
             <span class="company-card__cta-n num">5</span>
-            <span class="company-card__cta-t">Líneas de producto, desde el aceite crudo hasta el producto terminado.</span>
+            <span class="company-card__cta-t">Etapas de la cadena de valor, desde el aceite crudo hasta el producto terminado.</span>
             <span class="company-card__more">
               Productos y soluciones <Icon name="arrow" />
             </span>
