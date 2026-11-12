@@ -20,18 +20,6 @@ mkdirSync(OUT, { recursive: true });
 // una versión anterior con el mismo nombre (caché de 30 días) descarga la nueva.
 const hash = (buf) => createHash('md5').update(buf).digest('hex').slice(0, 8);
 
-// El Tesoro completo en cuadrado: la foto vertical entera, centrada sobre una
-// copia ampliada, desenfocada y oscurecida de sí misma (tarjeta y bloque Consumo).
-const TESORO = join(SRC, 'el-tesoro-etiqueta-nueva-2026-11.jpeg');
-const CUADRO = join(root, '_material', 'el-tesoro-cuadro.jpg');
-{
-  const S = 1600;
-  const fondo = await sharp(TESORO).resize(S, S, { fit: 'cover' }).blur(28).modulate({ brightness: 0.5 }).toBuffer();
-  const frente = await sharp(TESORO).resize({ height: S }).toBuffer();
-  const fw = (await sharp(frente).metadata()).width;
-  await sharp(fondo).composite([{ input: frente, left: Math.round((S - fw) / 2), top: 0 }]).jpeg({ quality: 90, mozjpeg: true }).toFile(CUADRO);
-}
-
 // nombre → [archivo original, tipo]. Tipos: hero (pantalla completa), foto, noticia.
 // Un nombre que empieza por «@/» es relativo al proyecto.
 const PHOTOS = {
@@ -59,7 +47,6 @@ const PHOTOS = {
   'racimo': ['2025_02_WhatsApp-Image-2025-02-26-at-13.05.59-3-scaled.jpeg', 'foto'],
   // Etiqueta nueva de El Tesoro (enviada por el cliente el 2026-11-11)
   'tesoro-anuncio': ['el-tesoro-etiqueta-nueva-2026-11.jpeg', 'foto'],
-  'tesoro-cuadro': ['@/_material/el-tesoro-cuadro.jpg', 'foto'],
   // Noticias (imagen destacada de cada una)
   'n-india': ['2026_09_KYOIMB5QWRFLPNECO5XYQYI6GY.avif', 'noticia'],
   'n-semana': ['2026_09_LBXME2WMX5AXPCUC3TMU7R3HKM.avif', 'noticia'],

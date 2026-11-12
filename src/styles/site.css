@@ -804,6 +804,10 @@
   background: linear-gradient(0deg, rgba(15, 14, 12, 0.82) 0%, rgba(15, 14, 12, 0.45) 45%, rgba(15, 14, 12, 0) 100%);
   pointer-events: none;
 }
+/* El Tesoro: la foto vertical completa, sin recortes ni laterales */
+.company-card__media--aceite-el-tesoro {
+  aspect-ratio: 9 / 16;
+}
 .company-card__logo {
   position: absolute;
   left: 18px;
@@ -865,8 +869,14 @@
     text-underline-offset: 6px;
   }
 }
+/* El recuadro oscuro ocupa todo el alto de su fila (la de El Tesoro es más alta). */
+.company-card--cta {
+  display: flex;
+}
 .company-card--cta .company-card__link {
-  aspect-ratio: 1 / 1;
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: 0;
   height: auto;
   align-content: end;
   gap: 18px;
@@ -891,10 +901,6 @@
 @media (max-width: 1179px) {
   .companies__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .company-card--cta .company-card__link {
-    aspect-ratio: auto;
-    min-height: 100%;
   }
 }
 /* Celular: dos columnas y sin el lema, para que la portada no se alargue */
@@ -1289,10 +1295,12 @@
   color: var(--gray-ink);
 }
 @media (max-width: 1023px) {
+  /* Sin sticky en celular, pero relative: el marco dorado se dibuja respecto a la foto */
   .sustain__photo,
   .sustain__text {
     grid-column: 1 / -1;
-    position: static;
+    position: relative;
+    top: auto;
   }
   .sustain__photo {
     width: min(100%, 520px);
@@ -2077,7 +2085,8 @@
   .line-block--alt .line-block__body {
     grid-column: 1 / -1;
     grid-row: auto;
-    position: static;
+    position: relative;
+    top: auto;
   }
   .line-block__media {
     width: min(100%, 460px);
@@ -2155,4 +2164,24 @@
   justify-items: start;
   padding-top: calc(var(--header-h) + 64px);
   padding-bottom: 96px;
+}
+
+/* Productos: El Tesoro con la foto vertical completa (sin recorte) */
+.line-block__media--completa {
+  max-width: 400px;
+}
+.line-block--alt .line-block__media--completa {
+  justify-self: end;
+}
+.line-block__media--completa .photo {
+  aspect-ratio: 9 / 16;
+}
+@media (max-width: 1023px) {
+  .line-block__media.line-block__media--completa {
+    width: min(100%, 320px);
+    justify-self: start;
+  }
+  .line-block__media--completa .photo {
+    aspect-ratio: 9 / 16;
+  }
 }

@@ -5,11 +5,11 @@ import Icon from '../components/Icon.astro';
 import { CIFRAS, INTRO, LINEAS } from '../data/productos.ts';
 import type images from '../data/images.json';
 
-const FOTOS: Record<string, { name: keyof typeof images; alt: string }> = {
+const FOTOS: Record<string, { name: keyof typeof images; alt: string; completa?: boolean }> = {
   '01': { name: 'bio-fruto', alt: 'Fruto de palma y aceite' },
   '02': { name: 'planta-exterior', alt: 'Planta industrial del grupo' },
   '03': { name: 'racimo', alt: 'Racimo de fruto de palma' },
-  '04': { name: 'tesoro-cuadro', alt: 'Aceite El Tesoro con su etiqueta actual' },
+  '04': { name: 'tesoro-anuncio', alt: 'Aceite El Tesoro con su etiqueta actual', completa: true },
   '05': { name: 'oleo-planta', alt: 'Interior de la planta de Morano Oleo' },
 };
 ---
@@ -58,7 +58,7 @@ const FOTOS: Record<string, { name: keyof typeof images; alt: string }> = {
     LINEAS.map((l, i) => (
       <section class:list={['line-block', { 'line-block--alt': i % 2 === 1 }]} id={`linea-${l.n}`} aria-labelledby={`linea-${l.n}-t`}>
         <div class="wrap grid line-block__grid">
-          <figure class="line-block__media framed reveal">
+          <figure class:list={['line-block__media framed reveal', { 'line-block__media--completa': FOTOS[l.n].completa }]}>
             <div class="reveal-mask photo">
               <Picture name={FOTOS[l.n].name} alt={FOTOS[l.n].alt} sizes="(min-width: 1024px) 34vw, 92vw" />
             </div>
