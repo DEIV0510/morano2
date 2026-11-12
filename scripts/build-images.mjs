@@ -7,6 +7,7 @@
 import sharp from 'sharp';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 
@@ -15,7 +16,24 @@ const SRC = process.argv[2] || join(homedir(), 'Desktop', 'MATERIAL-CLIENTES', '
 const OUT = join(root, 'public', 'img');
 mkdirSync(OUT, { recursive: true });
 
+// Versión corta del contenido: va como ?v= en las URL, así un celular que guardó
+// una versión anterior con el mismo nombre (caché de 30 días) descarga la nueva.
+const hash = (buf) => createHash('md5').update(buf).digest('hex').slice(0, 8);
+
+// El Tesoro completo en cuadrado: la foto vertical entera, centrada sobre una
+// copia ampliada, desenfocada y oscurecida de sí misma (tarjeta y bloque Consumo).
+const TESORO = join(SRC, 'el-tesoro-etiqueta-nueva-2026-11.jpeg');
+const CUADRO = join(root, '_material', 'el-tesoro-cuadro.jpg');
+{
+  const S = 1600;
+  const fondo = await sharp(TESORO).resize(S, S, { fit: 'cover' }).blur(28).modulate({ brightness: 0.5 }).toBuffer();
+  const frente = await sharp(TESORO).resize({ height: S }).toBuffer();
+  const fw = (await sharp(frente).metadata()).width;
+  await sharp(fondo).composite([{ input: frente, left: Math.round((S - fw) / 2), top: 0 }]).jpeg({ quality: 90, mozjpeg: true }).toFile(CUADRO);
+}
+
 // nombre → [archivo original, tipo]. Tipos: hero (pantalla completa), foto, noticia.
+// Un nombre que empieza por «@/» es relativo al proyecto.
 const PHOTOS = {
   // Portada
   'planta-tanques': ['2026_10_Morano-Gruppo-scaled.jpeg', 'hero'],
@@ -41,6 +59,7 @@ const PHOTOS = {
   'racimo': ['2025_02_WhatsApp-Image-2025-02-26-at-13.05.59-3-scaled.jpeg', 'foto'],
   // Etiqueta nueva de El Tesoro (enviada por el cliente el 2026-11-11)
   'tesoro-anuncio': ['el-tesoro-etiqueta-nueva-2026-11.jpeg', 'foto'],
+  'tesoro-cuadro': ['@/_material/el-tesoro-cuadro.jpg', 'foto'],
   // Noticias (imagen destacada de cada una)
   'n-india': ['2026_09_KYOIMB5QWRFLPNECO5XYQYI6GY.avif', 'noticia'],
   'n-semana': ['2026_09_LBXME2WMX5AXPCUC3TMU7R3HKM.avif', 'noticia'],
@@ -62,7 +81,7 @@ const WIDTHS = { hero: [960, 1440, 1920], foto: [640, 960, 1280], noticia: [480,
 
 const manifest = {};
 for (const [name, [file, kind]] of Object.entries(PHOTOS)) {
-  const input = join(SRC, file);
+  const input = file.startsWith('@/') ? join(root, file.slice(2)) : join(SRC, file);
   if (!existsSync(input)) throw new Error(`Falta el original: ${file}`);
   const meta = await sharp(input).rotate().metadata();
   const { width, height } = meta.autoOrient ?? meta;
@@ -75,7 +94,7 @@ for (const [name, [file, kind]] of Object.entries(PHOTOS)) {
     await pipe.clone().webp({ quality: 74, effort: 6 }).toFile(join(OUT, `${name}-${w}.webp`));
     await pipe.clone().jpeg({ quality: 78, mozjpeg: true, progressive: true }).toFile(join(OUT, `${name}-${w}.jpg`));
   }
-  manifest[name] = { width, height, widths, color };
+  manifest[name] = { width, height, widths, color, v: hash(readFileSync(input)) };
   console.log(name, `${width}×${height}`, widths.join('/'));
 }
 
@@ -110,14 +129,14 @@ for (const [name, file] of Object.entries(LOGOS)) {
   const m = await sharp(buf).metadata();
   await sharp(buf).webp({ quality: 92, alphaQuality: 100 }).toFile(join(OUT, `${name}.webp`));
   await sharp(buf).png({ compressionLevel: 9 }).toFile(join(OUT, `${name}.png`));
-  logos[name] = { width: m.width, height: m.height };
+  logos[name] = { width: m.width, height: m.height, v: hash(buf) };
   console.log(name, `${m.width}×${m.height}`);
 }
 // Morano Europe: el SVG vectorizado de su propia web.
 // Con width/height en el propio SVG para que se escale como una imagen normal.
 const europeSvg = readFileSync(join(root, '_material', 'logo-morano-europe.svg'), 'utf8').replace('<svg ', '<svg width="1296" height="166" ');
 writeFileSync(join(OUT, 'logo-europe.svg'), europeSvg);
-logos['logo-europe'] = { width: 1296, height: 166, svg: true };
+logos['logo-europe'] = { width: 1296, height: 166, svg: true, v: hash(Buffer.from(europeSvg)) };
 // Sello ISCC «Certificate Holder».
 await sharp(join(SRC, '2026_08_Certification_Holder_Banner_BLACK_positive_RGB.webp'))
   .resize({ width: 520 })

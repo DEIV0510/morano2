@@ -7,8 +7,9 @@ interface Props {
   class?: string;
 }
 const { empresa: e, class: cls = '' } = Astro.props;
-const d = logos[e.logo] as { width: number; height: number; svg?: boolean };
-const src = d.svg ? `/img/${e.logo}.svg` : `/img/${e.logo}.webp`;
+const d = logos[e.logo] as { width: number; height: number; svg?: boolean; v: string };
+// ?v= = huella del archivo: los celulares no reutilizan el logotipo viejo (con fondo blanco).
+const src = `/img/${e.logo}.${d.svg ? 'svg' : 'webp'}?v=${d.v}`;
 ---
 
 <img class:list={['empresa-logo', `empresa-logo--${e.slug}`, cls]} src={src} width={d.width} height={d.height} alt={`Logotipo de ${e.nombre}`} loading="lazy" decoding="async" />

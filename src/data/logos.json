@@ -1,31 +1,38 @@
 {
   "logo-oleo": {
     "width": 720,
-    "height": 110
+    "height": 110,
+    "v": "d1f2f9ab"
   },
   "logo-tesoro": {
     "width": 720,
-    "height": 189
+    "height": 189,
+    "v": "29cb03bf"
   },
   "logo-bio": {
     "width": 209,
-    "height": 165
+    "height": 165,
+    "v": "f0d6e865"
   },
   "logo-motrade": {
     "width": 613,
-    "height": 77
+    "height": 77,
+    "v": "2b40f0b5"
   },
   "logo-famar": {
     "width": 720,
-    "height": 127
+    "height": 127,
+    "v": "793d269a"
   },
   "logo-usa": {
     "width": 720,
-    "height": 116
+    "height": 116,
+    "v": "746c64fd"
   },
   "logo-europe": {
     "width": 1296,
     "height": 166,
-    "svg": true
+    "svg": true,
+    "v": "6f2cc673"
   }
 }

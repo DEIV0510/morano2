@@ -130,7 +130,7 @@ export const EMPRESAS: Empresa[] = [
       { titulo: 'Formatos de presentación', texto: 'Botellas y garrafas pensadas tanto para el sector HORECA (hoteles, restaurantes y catering) como para el canal retail y el consumo en el hogar.' },
     ],
     foto: 'tesoro-anuncio',
-    tarjeta: 'tesoro-anuncio',
+    tarjeta: 'tesoro-cuadro',
     destacada: 'tesoro-anuncio',
   },
   {

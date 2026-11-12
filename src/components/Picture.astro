@@ -13,7 +13,9 @@ interface Props {
 }
 const { name, alt, sizes, class: cls, loading = 'lazy', priority = false } = Astro.props;
 const img = images[name];
-const set = (ext: string) => img.widths.map((w) => `/img/${name}-${w}.${ext} ${w}w`).join(', ');
+// ?v= = huella del original: evita que un celular use una copia vieja de la caché.
+const q = img.v ? `?v=${img.v}` : '';
+const set = (ext: string) => img.widths.map((w) => `/img/${name}-${w}.${ext}${q} ${w}w`).join(', ');
 const fallbackW = img.widths[img.widths.length - 1];
 ---
 
@@ -21,7 +23,7 @@ const fallbackW = img.widths[img.widths.length - 1];
   <source type="image/avif" srcset={set('avif')} sizes={sizes} />
   <source type="image/webp" srcset={set('webp')} sizes={sizes} />
   <img
-    src={`/img/${name}-${fallbackW}.jpg`}
+    src={`/img/${name}-${fallbackW}.jpg${q}`}
     srcset={set('jpg')}
     sizes={sizes}
     width={img.width}
