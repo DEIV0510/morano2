@@ -47,8 +47,8 @@ const ogImage = e ? `/img/${e.foto}-${images[e.foto].widths.at(-1)}.jpg` : n ? `
 {
   e && (
     <Base
-      title={`${e.nombre} | ${e.lema} — Morano Gruppo`}
-      description={e.descripcion.slice(0, 158).replace(/\s\S*$/, '') + '…'}
+      title={`${e.nombre} | ${e.lema.length > 60 ? e.area : e.lema} — Morano Gruppo`}
+      description={e.descripcion.length > 158 ? e.descripcion.slice(0, 158).replace(/\s\S*$/, '') + '…' : e.descripcion}
       path={path}
       overlayHeader
       ogImage={ogImage}

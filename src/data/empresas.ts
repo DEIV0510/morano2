@@ -65,14 +65,16 @@ export const EMPRESAS: Empresa[] = [
     logo: 'logo-bio',
     web: 'www.bioindustria.org',
     webUrl: 'https://www.bioindustria.org/',
-    area: 'Envasado y bioeconomía',
-    lema: 'Innovación biotecnológica e industria sostenible',
+    // Texto dado por el cliente (2026-11-13): la web anterior la presentaba como
+    // empresa de biotecnología y bioeconomía, que no es su actividad.
+    area: 'Envasado y exportación',
+    lema: 'Envasado, comercialización y exportación de aceites vegetales refinados de palma desde Colombia hacia mercados internacionales',
     descripcion:
-      'En Bio Industria desarrollamos soluciones técnicas avanzadas enfocadas en la bioeconomía. Aprovechamos subproductos agrícolas e industriales para crear insumos, soluciones sostenibles e innovaciones que responden a los retos medioambientales de los sectores productivos actuales.',
+      'Bio Industria se dedica al envasado, la comercialización y la exportación de aceites vegetales refinados de palma, desde Colombia hacia mercados internacionales.',
     pilares: [
       { titulo: 'Envasado y embotellado de precisión', texto: 'Líneas automatizadas de llenado para aceites y líquidos en múltiples formatos (botellas de vidrio, PET, garrafas y tambores/contenedores industriales).' },
-      { titulo: 'Desarrollo biotecnológico', texto: 'Investigación e implementación de soluciones limpias para procesos productivos.' },
-      { titulo: 'Sostenibilidad ambiental', texto: 'Reducción del impacto ecológico mediante la optimización de recursos.' },
+      { titulo: 'Comercialización', texto: 'Aceites vegetales refinados de palma producidos en Colombia.' },
+      { titulo: 'Exportación', texto: 'Despachos desde Colombia hacia mercados internacionales.' },
     ],
     foto: 'bio-envasado',
     tarjeta: 'card-bio',
