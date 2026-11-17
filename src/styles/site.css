@@ -2239,3 +2239,31 @@
     aspect-ratio: 9 / 16;
   }
 }
+
+/* Página de noticias: dos bloques (prensa y del grupo) */
+.page-head .page-head__jump {
+  margin-top: clamp(28px, 3vw, 40px);
+  padding: 0;
+}
+.news__head--list {
+  align-items: end;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.news__list-title {
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+.news__list-note {
+  max-width: 46ch;
+  font-size: var(--fs-small);
+}
+.news--gruppo {
+  background: var(--ivory);
+  scroll-margin-top: var(--header-h);
+}
+#en-los-medios {
+  scroll-margin-top: var(--header-h);
+}

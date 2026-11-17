@@ -15,7 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = process.argv[2] || join(homedir(), 'Desktop', 'MATERIAL-CLIENTES', 'morano-gruppo', 'web-actual');
 const posts = JSON.parse(readFileSync(join(SRC, '_noticias.json'), 'utf8'));
 
-// Orden y foto de cada nota, tal como aparecen hoy en /noticias/.
+// Orden y foto de cada nota (como en la web anterior; la de 2017 al final).
 const ORDER = [
   ['sector-palmero-del-magdalena-fortalece-su-apuesta-internacional-y-anuncia-llegada-a-la-india', 'n-india'],
   ['grupo-empresarial-de-la-costa-se-transforma-ahora-su-foco-sera-la-agroindustria-en-el-sector-palmero', 'n-semana'],
@@ -23,7 +23,6 @@ const ORDER = [
   ['morano-oleo-realiza-el-i-encuentro-conexion-nucleo-palmero-para-fortalecer-el-sector', 'n-encuentro-1'],
   ['nueva-alianza-entre-morano-y-nitrofert-para-impulsar-a-los-palmicultores', 'n-nitrofert'],
   ['morano-impulsa-la-educacion-ambiental-en-la-zona-bananera', 'n-educacion'],
-  ['grupo-morano-rompiendo-esquemas', 'n-esquemas'],
   ['manos-al-mar-morano-gruppo-lidero-exitosa-jornada-ambiental-en-el-dia-mundial-del-agua', 'n-manos-mar'],
   ['ii-encuentro-conexion-nucleo-palmero-de-morano-oleo', 'n-encuentro-2'],
   ['morano-regalo-sonrisas-y-cine-a-mas-de-200-ninos-en-santa-marta-en-su-dia-especial', 'n-ninos'],
@@ -32,6 +31,8 @@ const ORDER = [
   ['formacion-del-instituto-de-ciencia-politica-hernan-echavarria-olozaga-fortalece-el-espiritu-empresarial-en-morano', 'n-icp'],
   ['morano-gruppo-celebra-36-anos-de-historia-crecimiento-y-transformacion', 'n-36-anos'],
   ['morano-gruppo-presenta-el-tesoro-un-aliado-estrategico-para-la-industria-alimentaria-cubana', 'n-tesoro-cuba'],
+  // Nota de 2017: al final, para que la prensa quede de la más reciente a la más antigua.
+  ['grupo-morano-rompiendo-esquemas', 'n-esquemas'],
 ];
 
 // Notas de prensa: fuente, enlace y resumen propio (no se reproduce el artículo).
@@ -118,6 +119,57 @@ const out = ORDER.map(([slug, image]) => {
   const excerpt = plain.length > 190 ? plain.slice(0, plain.lastIndexOf(' ', 185)) + '…' : plain;
   return { slug, title, image, excerpt, paragraphs };
 });
+
+// Notas de prensa que no estaban en la web anterior (enviadas por el cliente).
+// La foto es del propio grupo: las imágenes de los medios son suyas.
+const EXTRA = [
+  {
+    slug: 'morano-gruppo-combustible-sostenible-de-aviacion',
+    title: 'Morano Gruppo ya tiene la mira puesta en el negocio de producir combustible sostenible de aviación',
+    image: 'planta-exterior',
+    prensa: {
+      fuente: 'Portafolio',
+      url: 'https://www.portafolio.co/negocios/empresas/morano-gruppo-ya-tiene-la-mira-puesta-en-el-negocio-de-producir-combustible-sostenible-de-aviacion-506298',
+      fecha: '2026-11-16',
+      resumen: 'Portafolio recoge la apuesta de Morano Gruppo por el combustible sostenible de aviación (SAF). Su CEO, Jorge Camilo Gnecco, señala que este nuevo mercado exigiría sembrar unas 160.000 hectáreas más de palma.',
+    },
+  },
+  {
+    slug: 'proyecto-colombia-potencia-combustible-sostenible-aviones',
+    title: 'El proyecto que busca convertir a Colombia en potencia en combustible sostenible para aviones',
+    image: 'motrade-planta',
+    prensa: {
+      fuente: 'El Universal',
+      url: 'https://www.eluniversal.com.co/politica/2026/11/16/el-proyecto-que-busca-convertir-a-colombia-en-potencia-en-combustible-sostenible-para-aviones/',
+      fecha: '2026-11-16',
+      resumen: 'El Universal entrevista a Jorge Camilo Gnecco Espinosa, presidente ejecutivo de Morano Gruppo, sobre el Proyecto de Ley 216 de 2026, que busca impulsar en Colombia la producción de combustibles sostenibles de aviación a partir de materias primas como el aceite de palma.',
+    },
+  },
+  {
+    slug: 'aceite-de-palma-para-aviacion-hasta-164000-nuevas-hectareas',
+    title: 'Producir aceite de palma para aviación requeriría de hasta 164.000 nuevas hectáreas',
+    image: 'racimo',
+    prensa: {
+      fuente: 'Agronegocios',
+      url: 'https://www.agronegocios.co/agricultura/aceite-de-palma-para-aviacion-requeriria-de-hasta-164-000-nuevas-hectareas-en-colombia-4524582',
+      fecha: '2026-11-13',
+      resumen: 'Agronegocios analiza lo que significa que la OACI aprobara el aceite de palma colombiano como materia prima para combustibles sostenibles de aviación, con declaraciones de Jorge Camilo Gnecco, CEO y presidente ejecutivo de Morano Gruppo.',
+    },
+  },
+  {
+    // La página del medio no carga (ni desde aquí ni desde el navegador del
+    // usuario): título tomado de la dirección del artículo, sin fecha.
+    slug: 'jorge-camilo-gnecco-espinosa-agroindustria-colombiana-mercado-estados-unidos',
+    title: 'Beyond Raw Commodities: How Jorge Camilo Gnecco Espinosa Is Scaling Colombia’s Agribusiness in the US Market',
+    image: 'usa-bodega',
+    prensa: {
+      fuente: 'CB Herald',
+      url: 'https://cbherald.com/beyond-raw-commodities-how-jorge-camilo-gnecco-espinosa-is-scaling-colombias-agribusiness-in-the-us-market/',
+      resumen: 'CB Herald publica un perfil de Jorge Camilo Gnecco Espinosa, presidente ejecutivo de Morano Gruppo, sobre la expansión de la agroindustria colombiana en el mercado de Estados Unidos.',
+    },
+  },
+];
+out.unshift(...EXTRA);
 
 writeFileSync(join(root, 'src', 'data', 'noticias.json'), JSON.stringify(out, null, 2) + '\n');
 console.log(`${out.length} noticias (${out.filter((n) => n.prensa).length} de prensa) → src/data/noticias.json`);

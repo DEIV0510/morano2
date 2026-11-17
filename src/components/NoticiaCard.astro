@@ -1,7 +1,7 @@
 ---
 import Picture from './Picture.astro';
 import Icon from './Icon.astro';
-import type { Noticia } from '../lib/noticias.ts';
+import { origen, type Noticia } from '../lib/noticias.ts';
 interface Props {
   n: Noticia;
   headingLevel?: 'h2' | 'h3';
@@ -17,7 +17,7 @@ const texto = n.prensa ? n.prensa.resumen : n.excerpt;
     <div class="news-card__media photo">
       <Picture name={n.image} alt="" sizes="(min-width: 1100px) 30vw, (min-width: 700px) 46vw, 92vw" />
     </div>
-    <p class="news-card__src">{n.prensa ? `Prensa · ${n.prensa.fuente}` : 'Morano Gruppo'}</p>
+    <p class="news-card__src">{origen(n)}</p>
     <H class="news-card__title">{n.title}</H>
     <p class="news-card__text">{texto}</p>
     <span class="news-card__more">Leer <Icon name="arrow" /></span>

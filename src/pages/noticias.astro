@@ -1,12 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import NoticiaCard from '../components/NoticiaCard.astro';
-import { NOTICIAS } from '../lib/noticias.ts';
+import { DEL_GRUPPO, EN_MEDIOS } from '../lib/noticias.ts';
 ---
 
 <Base
   title="Noticias | Morano Gruppo"
-  description="Actualidad de Morano Gruppo: sector palmero, alianzas, responsabilidad social y presencia en prensa nacional e internacional."
+  description="Actualidad de Morano Gruppo: combustible sostenible de aviación, sector palmero, alianzas, responsabilidad social y presencia en prensa nacional e internacional."
   path="/noticias/"
   current="/noticias/"
 >
@@ -20,11 +20,42 @@ import { NOTICIAS } from '../lib/noticias.ts';
         <span>Noticias</span>
         <span class="page-head__title-2">del Gruppo.</span>
       </h1>
+      <nav class="page-head__jump" aria-label="Secciones de noticias">
+        <ul role="list">
+          <li><a href="#en-los-medios"><span class="num">{String(EN_MEDIOS.length).padStart(2, '0')}</span> En los medios</a></li>
+          <li><a href="#del-gruppo"><span class="num">{String(DEL_GRUPPO.length).padStart(2, '0')}</span> Del Gruppo</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
-  <section class="section news news--all" aria-label="Todas las noticias">
-    <div class="wrap news__grid">
-      {NOTICIAS.map((n, i) => <NoticiaCard n={n} headingLevel="h2" delay={(i % 3) * 80} />)}
+
+  <section class="section news news--all" id="en-los-medios" aria-labelledby="medios-title">
+    <div class="wrap">
+      <div class="news__head news__head--list">
+        <div>
+          <p class="label">Prensa</p>
+          <h2 id="medios-title" class="h3 news__list-title">En los medios</h2>
+        </div>
+        <p class="muted news__list-note">Notas publicadas por medios nacionales e internacionales. Cada una enlaza al artículo original.</p>
+      </div>
+      <div class="news__grid">
+        {EN_MEDIOS.map((n, i) => <NoticiaCard n={n} delay={(i % 3) * 80} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section news news--all news--gruppo" id="del-gruppo" aria-labelledby="gruppo-title">
+    <div class="wrap">
+      <div class="news__head news__head--list">
+        <div>
+          <p class="label">Morano Gruppo</p>
+          <h2 id="gruppo-title" class="h3 news__list-title">Del Gruppo</h2>
+        </div>
+        <p class="muted news__list-note">Encuentros con palmicultores, alianzas, formación y responsabilidad social.</p>
+      </div>
+      <div class="news__grid">
+        {DEL_GRUPPO.map((n, i) => <NoticiaCard n={n} delay={(i % 3) * 80} />)}
+      </div>
     </div>
   </section>
 </Base>

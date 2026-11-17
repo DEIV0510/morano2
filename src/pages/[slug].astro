@@ -7,7 +7,7 @@ import Icon from '../components/Icon.astro';
 import EmpresaLogo from '../components/EmpresaLogo.astro';
 import NoticiaCard from '../components/NoticiaCard.astro';
 import { EMPRESAS, type Empresa } from '../data/empresas.ts';
-import { NOTICIAS, fecha, type Noticia } from '../lib/noticias.ts';
+import { NOTICIAS, fecha, origen, type Noticia } from '../lib/noticias.ts';
 import { HOME, SITE } from '../lib/site.ts';
 import images from '../data/images.json';
 
@@ -167,7 +167,7 @@ const ogImage = e ? `/img/${e.foto}-${images[e.foto].widths.at(-1)}.jpg` : n ? `
               <li><a href="/">Inicio</a></li>
               <li><a href="/noticias/">Noticias</a></li>
             </ol>
-            <p class="label">{n.prensa ? `Prensa · ${n.prensa.fuente} · ${fecha(n.prensa.fecha)}` : 'Morano Gruppo'}</p>
+            <p class="label">{n.prensa ? `Prensa · ${origen(n, fecha)}` : 'Morano Gruppo'}</p>
             <h1 class="article__title">{n.title}</h1>
           </div>
         </header>
