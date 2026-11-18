@@ -31,6 +31,7 @@ add_filter( 'robots_txt', 'mgw_robots', 99, 2 );
 add_filter( 'wp_sitemaps_enabled', 'mgw_sitemaps_enabled', 99 );
 add_action( 'admin_menu', 'mgw_admin_menu' );
 add_action( 'admin_init', 'mgw_admin_init' );
+add_action( 'admin_post_mgw_upload_img', 'mgw_handle_img_upload' );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'mgw_action_links' );
 add_action( 'add_option_' . MGW_OPTION, 'mgw_purge_cache' );
 add_action( 'update_option_' . MGW_OPTION, 'mgw_purge_cache' );
@@ -240,6 +241,91 @@ function mgw_sitemaps_enabled( $enabled ) {
 	return mgw_is_live() ? false : $enabled;
 }
 
+/*
+ * Imágenes. Van en wp-content/uploads/morano-gruppo-web/img/ (no dentro del
+ * plugin): así sobreviven al actualizar el plugin y el ZIP del plugin es
+ * pequeño. Se suben por partes desde Ajustes → Web Morano Gruppo.
+ */
+
+function mgw_img_dir() {
+	$up = wp_upload_dir( null, false );
+	return trailingslashit( $up['basedir'] ) . 'morano-gruppo-web/img';
+}
+
+/** Imágenes que la web espera (pages/img-manifest.json: nombre → md5). */
+function mgw_img_manifest() {
+	$json = @file_get_contents( MGW_DIR . '/pages/img-manifest.json' ); // phpcs:ignore
+	$map  = $json ? json_decode( $json, true ) : array();
+	return is_array( $map ) ? $map : array();
+}
+
+/** Nombres de las imágenes que faltan o no coinciden con esta versión. */
+function mgw_img_pending() {
+	$dir     = mgw_img_dir();
+	$pending = array();
+	foreach ( mgw_img_manifest() as $name => $md5 ) {
+		$file = $dir . '/' . $name;
+		if ( ! is_file( $file ) || md5_file( $file ) !== $md5 ) {
+			$pending[] = $name;
+		}
+	}
+	return $pending;
+}
+
+function mgw_handle_img_upload() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( 'Sin permiso.' );
+	}
+	check_admin_referer( 'mgw_upload_img' );
+	$back = admin_url( 'options-general.php?page=morano-gruppo-web' );
+	$tmp  = isset( $_FILES['mgw_zip']['tmp_name'] ) ? (string) $_FILES['mgw_zip']['tmp_name'] : '';
+	if ( '' === $tmp || ! is_uploaded_file( $tmp ) ) {
+		wp_safe_redirect( add_query_arg( 'mgw_msg', 'nofile', $back ) );
+		exit;
+	}
+	if ( ! class_exists( 'ZipArchive' ) ) {
+		wp_safe_redirect( add_query_arg( 'mgw_msg', 'nozip', $back ) );
+		exit;
+	}
+	$zip = new ZipArchive();
+	if ( true !== $zip->open( $tmp ) ) {
+		wp_safe_redirect( add_query_arg( 'mgw_msg', 'badzip', $back ) );
+		exit;
+	}
+	$dir = mgw_img_dir();
+	wp_mkdir_p( $dir );
+	mgw_img_htaccess( dirname( $dir ) );
+	$n = 0;
+	for ( $i = 0; $i < $zip->numFiles; $i++ ) {
+		$name = (string) $zip->getNameIndex( $i );
+		// Solo imágenes planas dentro de img/: nada de subcarpetas, «..» ni otros tipos.
+		if ( ! preg_match( '#^img/([a-z0-9][a-z0-9._-]*\.(?:avif|webp|jpe?g|png|svg))$#i', $name, $m ) || false !== strpos( $name, '..' ) ) {
+			continue;
+		}
+		$data = $zip->getFromIndex( $i );
+		if ( false !== $data && false !== file_put_contents( $dir . '/' . $m[1], $data ) ) { // phpcs:ignore
+			$n++;
+		}
+	}
+	$zip->close();
+	mgw_purge_cache();
+	wp_safe_redirect( add_query_arg( array( 'mgw_msg' => 'ok', 'mgw_n' => $n ), $back ) );
+	exit;
+}
+
+/** Tipos y caché de las imágenes (Apache/LiteSpeed). */
+function mgw_img_htaccess( $dir ) {
+	$file = $dir . '/.htaccess';
+	if ( is_file( $file ) ) {
+		return;
+	}
+	file_put_contents( // phpcs:ignore
+		$file,
+		"<IfModule mod_mime.c>\n  AddType image/avif .avif\n  AddType image/webp .webp\n</IfModule>\n<IfModule mod_headers.c>\n  <FilesMatch \"\\.(avif|webp|jpe?g|png|svg)$\">\n    Header set Cache-Control \"public, max-age=2592000\"\n  </FilesMatch>\n</IfModule>\n"
+	);
+	file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" ); // phpcs:ignore
+}
+
 /** Vacía la caché de LiteSpeed (si está instalado) al publicar, ocultar o actualizar. */
 function mgw_purge_cache() {
 	do_action( 'litespeed_purge_all' );
@@ -278,14 +364,38 @@ function mgw_settings_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	$live = mgw_is_live();
+	$live    = mgw_is_live();
+	$total   = count( mgw_img_manifest() );
+	$pending = mgw_img_pending();
+	$msg     = isset( $_GET['mgw_msg'] ) ? sanitize_key( $_GET['mgw_msg'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	$msgs    = array(
+		'ok'     => 'Paquete subido: ' . ( isset( $_GET['mgw_n'] ) ? absint( $_GET['mgw_n'] ) : 0 ) . ' imágenes guardadas.', // phpcs:ignore
+		'nofile' => 'No llegó ningún archivo. Elija el ZIP de imágenes e inténtelo de nuevo.',
+		'nozip'  => 'El servidor no tiene la extensión ZipArchive de PHP.',
+		'badzip' => 'El archivo no es un ZIP válido.',
+	);
 	?>
 	<div class="wrap">
 		<h1>Web Morano Gruppo</h1>
+		<?php if ( isset( $msgs[ $msg ] ) ) : ?>
+			<div class="notice notice-<?php echo 'ok' === $msg ? 'success' : 'error'; ?>"><p><?php echo esc_html( $msgs[ $msg ] ); ?></p></div>
+		<?php endif; ?>
 		<p>
 			Estado:
 			<strong><?php echo $live ? 'publicada para todos los visitantes' : 'vista previa (solo administradores conectados)'; ?></strong>
 		</p>
+		<p id="mgw-img-status">
+			Imágenes:
+			<strong><?php echo esc_html( ( $total - count( $pending ) ) . ' de ' . $total ); ?></strong>
+			<?php echo $pending ? '— faltan ' . count( $pending ) . '. Suba los paquetes de imágenes.' : '— completas.'; ?>
+		</p>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
+			<input type="hidden" name="action" value="mgw_upload_img" />
+			<?php wp_nonce_field( 'mgw_upload_img' ); ?>
+			<label>Paquete de imágenes (ZIP): <input type="file" name="mgw_zip" id="mgw-zip" accept=".zip,application/zip" /></label>
+			<?php submit_button( 'Subir imágenes', 'secondary', 'mgw-upload', false ); ?>
+		</form>
+		<hr />
 		<p>
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener">Ver la web</a>
 		</p>

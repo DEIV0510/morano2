@@ -6,6 +6,9 @@
 //     pages/                  HTML + redirects.json (solo lo lee PHP; acceso directo bloqueado)
 //     site/                   CSS, JS, fuentes, imágenes (los sirve el servidor)
 //   dist-wp/morano-gruppo-web.zip  → WordPress: Plugins → Añadir nuevo → Subir plugin
+//   dist-wp/morano-gruppo-imagenes-N.zip → Ajustes → Web Morano Gruppo → Subir imágenes
+//     (las imágenes van en wp-content/uploads/morano-gruppo-web/img/: no se
+//     borran al actualizar el plugin; cada paquete pesa menos de 7 MB)
 //
 // Las rutas absolutas de recursos (/img/…, /_astro/…) se reescriben a la
 // carpeta del plugin. Las redirecciones de vercel.json pasan a redirects.json.
@@ -15,6 +18,7 @@
 // Uso: npm run wp   (compila y empaqueta)
 import { cpSync, rmSync, mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
@@ -25,6 +29,9 @@ const OUT_ROOT = join(root, 'dist-wp');
 const OUT = join(OUT_ROOT, SLUG);
 const SITE = 'https://moranogruppo.com';
 const BASE = `/wp-content/plugins/${SLUG}/site`;
+const IMG_BASE = '/wp-content/uploads/morano-gruppo-web/img';
+const IMG_OUT = join(OUT_ROOT, 'imagenes', 'img');
+const PART_MAX = 7 * 1024 * 1024; // el navegador sube como mucho 10 MB por vez
 
 const ASSETS = ['_astro', 'img', 'fonts', 'brand', 'intro.js', 'favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'site.webmanifest'];
 const FILES = ['index.html', '404.html', 'sitemap.xml'];
@@ -38,7 +45,8 @@ mkdirSync(join(OUT, 'site'), { recursive: true });
 
 for (const entry of readdirSync(DIST)) {
   const src = join(DIST, entry);
-  if (ASSETS.includes(entry)) cpSync(src, join(OUT, 'site', entry), { recursive: true });
+  if (entry === 'img') cpSync(src, IMG_OUT, { recursive: true });
+  else if (ASSETS.includes(entry)) cpSync(src, join(OUT, 'site', entry), { recursive: true });
   else if (FILES.includes(entry)) cpSync(src, join(OUT, 'pages', entry));
   else if (SKIP.includes(entry)) continue;
   else if (statSync(src).isDirectory() && existsSync(join(src, 'index.html')) && /^[a-z0-9][a-z0-9-]*$/.test(entry))
@@ -84,7 +92,8 @@ for (const file of walk(OUT)) {
   const src = readFileSync(file, 'utf8');
   const out = src.replace(REWRITE, (_, pre, domain, rest) => {
     rewritten++;
-    return `${pre}${domain ? SITE : ''}${BASE}/${rest}`;
+    const base = rest === 'img' || rest.startsWith('img/') ? IMG_BASE.slice(0, -'/img'.length) : BASE;
+    return `${pre}${domain ? SITE : ''}${base}/${rest}`;
   });
   if (out !== src) writeFileSync(file, out);
 }
@@ -106,6 +115,9 @@ for (const file of walk(OUT)) {
   for (const m of text.matchAll(new RegExp(`${esc(BASE)}/([^"'\\s),?#]+)`, 'g'))) {
     if (!existsSync(join(OUT, 'site', m[1]))) problems.push(`${rel}: falta el recurso ${m[1]}`);
   }
+  for (const m of text.matchAll(new RegExp(`${esc(IMG_BASE)}/([^"'\\s),?#]+)`, 'g'))) {
+    if (!existsSync(join(IMG_OUT, m[1]))) problems.push(`${rel}: falta la imagen ${m[1]}`);
+  }
   if (extname(file) === '.html') {
     pages++;
     for (const m of text.matchAll(/href="((?:https:\/\/moranogruppo\.com)?\/(?!\/)[^"]*)"/g)) {
@@ -124,7 +136,7 @@ if (problems.length) {
 
 // Seguridad y caché de las carpetas.
 const silence = '<?php\n// Silence is golden.\n';
-for (const dir of [OUT, join(OUT, 'pages'), ...['', '_astro', 'img', 'fonts', 'brand'].map((d) => join(OUT, 'site', d))]) {
+for (const dir of [OUT, join(OUT, 'pages'), ...['', '_astro', 'fonts', 'brand'].map((d) => join(OUT, 'site', d))]) {
   if (existsSync(dir) && !existsSync(join(dir, 'index.php'))) writeFileSync(join(dir, 'index.php'), silence);
 }
 writeFileSync(
@@ -141,10 +153,38 @@ writeFileSync(
   '<IfModule mod_headers.c>\n  <FilesMatch "\\.(css|js)$">\n    Header set Cache-Control "public, max-age=31536000, immutable"\n  </FilesMatch>\n</IfModule>\n'
 );
 
+// ── Imágenes: manifiesto (nombre → md5) y paquetes de menos de 7 MB ──
+const imgs = readdirSync(IMG_OUT).filter((n) => statSync(join(IMG_OUT, n)).isFile()).sort();
+for (const n of imgs) {
+  if (!/^[a-z0-9][a-z0-9._-]*\.(avif|webp|jpe?g|png|svg)$/i.test(n)) throw new Error(`Nombre de imagen no admitido por el plugin: ${n}`);
+}
+const manifest = Object.fromEntries(imgs.map((n) => [n, createHash('md5').update(readFileSync(join(IMG_OUT, n))).digest('hex')]));
+writeFileSync(join(OUT, 'pages', 'img-manifest.json'), JSON.stringify(manifest));
+const parts = [[]];
+let partSize = 0;
+for (const n of imgs) {
+  const size = statSync(join(IMG_OUT, n)).size;
+  if (partSize + size > PART_MAX && parts.at(-1).length) {
+    parts.push([]);
+    partSize = 0;
+  }
+  parts.at(-1).push(n);
+  partSize += size;
+}
+
 // ZIP con el tar de Windows (bsdtar): rutas con «/», válidas en el servidor Linux.
+const makeZip = (zipPath, cwd, entries) => {
+  if (process.platform === 'win32') execFileSync('C:\\Windows\\System32\\tar.exe', ['-a', '-c', '-f', zipPath, ...entries], { cwd });
+  else execFileSync('zip', ['-qr', zipPath, ...entries], { cwd });
+};
 const zip = join(OUT_ROOT, `${SLUG}.zip`);
-if (process.platform === 'win32') execFileSync('C:\\Windows\\System32\\tar.exe', ['-a', '-c', '-f', zip, SLUG], { cwd: OUT_ROOT });
-else execFileSync('zip', ['-qr', zip, SLUG], { cwd: OUT_ROOT });
+makeZip(zip, OUT_ROOT, [SLUG]);
+parts.forEach((list, i) => {
+  const partZip = join(OUT_ROOT, `morano-gruppo-imagenes-${i + 1}.zip`);
+  makeZip(partZip, join(OUT_ROOT, 'imagenes'), list.map((n) => `img/${n}`));
+  if (statSync(partZip).size > 10 * 1024 * 1024) throw new Error(`El paquete de imágenes ${i + 1} pesa más de 10 MB`);
+});
 
 const mb = (statSync(zip).size / 1048576).toFixed(2);
 console.log(`Plugin ${SLUG} ${version}: ${pages} HTML, ${rewritten} rutas reescritas, ${Object.keys(redirects.exact).length} + ${Object.keys(redirects.prefix).length} redirecciones, sin problemas. ZIP ${mb} MB → ${zip}`);
+console.log(`Imágenes: ${imgs.length} en ${parts.length} paquetes (morano-gruppo-imagenes-1…${parts.length}.zip)`);
