@@ -4,13 +4,228 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=()"
+        }
       ]
     },
-    { "source": "/_astro/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
-    { "source": "/(img|fonts|brand)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] }
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(img|fonts|brand)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/nosotros",
+      "destination": "/#nosotros",
+      "permanent": true
+    },
+    {
+      "source": "/nosotros/",
+      "destination": "/#nosotros",
+      "permanent": true
+    },
+    {
+      "source": "/hotel-casa-morano",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/hotel-casa-morano/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-gres",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-gres/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-terra",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-terra/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-scuola",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-scuola/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-costruzione",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-costruzione/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/casa-morano",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/casa-morano/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-immobiliare",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-immobiliare/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/piastrelle",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/piastrelle/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/disegno-di-morano",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/disegno-di-morano/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-rooftile",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/morano-rooftile/",
+      "destination": "/#empresas",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sample-page",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sample-page/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sitio-en-construccion",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/sitio-en-construccion/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/2026-2",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/2026-2/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/inicio",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/inicio/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/feed",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/feed/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/comments/feed",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/comments/feed/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/noticias/",
+      "permanent": true
+    }
   ]
 }
