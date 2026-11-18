@@ -226,6 +226,11 @@
       "source": "/category/:path*",
       "destination": "/noticias/",
       "permanent": true
+    },
+    {
+      "source": "/category/:path*/",
+      "destination": "/noticias/",
+      "permanent": true
     }
   ]
 }
