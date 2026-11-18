@@ -14,7 +14,8 @@
     "check": "astro check",
     "images": "node scripts/build-images.mjs",
     "brand": "node scripts/brand/build-logo.mjs",
-    "noticias": "node scripts/import-noticias.mjs"
+    "noticias": "node scripts/import-noticias.mjs",
+    "wp": "astro build && node scripts/wordpress/build-plugin.mjs"
   },
   "dependencies": {
     "astro": "^7.4.5"
