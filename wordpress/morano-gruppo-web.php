@@ -87,6 +87,17 @@ function mgw_route() {
 		return;
 	}
 
+	// www.moranogruppo.com → moranogruppo.com (misma ruta y parámetros).
+	$host = isset( $_SERVER['HTTP_HOST'] ) ? strtolower( (string) $_SERVER['HTTP_HOST'] ) : '';
+	$home = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
+	if ( '' !== $home && 'www.' . $home === $host ) {
+		$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) $_SERVER['REQUEST_URI'] : '/';
+		mgw_clean_buffers();
+		header( 'X-LiteSpeed-Cache-Control: no-cache' );
+		wp_redirect( 'https://' . $home . $uri, 301, 'Morano Gruppo' );
+		exit;
+	}
+
 	// Portada (sin parámetros propios de WordPress: búsquedas, vistas previas…).
 	if ( '/' === $path ) {
 		if ( mgw_is_plain_request() ) {
