@@ -337,9 +337,17 @@ function mgw_img_htaccess( $dir ) {
 	file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" ); // phpcs:ignore
 }
 
-/** Vacía la caché de LiteSpeed (si está instalado) al publicar, ocultar o actualizar. */
+/**
+ * Vacía la caché de LiteSpeed al publicar, ocultar o actualizar. El «purgar
+ * todo» del plugin LiteSpeed Cache solo borra las páginas con sus etiquetas;
+ * las de esta web llevan la etiqueta «mgw» (también las de www), así que se
+ * pide además al servidor que purgue esa etiqueta.
+ */
 function mgw_purge_cache() {
 	do_action( 'litespeed_purge_all' );
+	if ( ! headers_sent() ) {
+		header( 'X-LiteSpeed-Purge: tag=mgw', false );
+	}
 }
 
 function mgw_admin_init() {
