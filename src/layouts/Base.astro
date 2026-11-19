@@ -69,6 +69,19 @@ const ldJson = JSON.stringify(ld.length === 1 ? ld[0] : ld).replace(/</g, '\\u00
     <link rel="preload" href="/fonts/jost-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jost-400.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={ldJson} />
+    <script is:inline define:vars={{ gaId: SITE.gaId, gaHost: SITE.gaHost }}>
+      // Google Analytics: solo en el dominio real, para no contar vistas previas ni pruebas.
+      if (location.hostname === gaHost) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', gaId);
+        var ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(ga);
+      }
+    </script>
     <slot name="head" />
   </head>
   <body data-overlay-header={overlayHeader ? 'true' : undefined}>

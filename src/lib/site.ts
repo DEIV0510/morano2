@@ -10,6 +10,10 @@ export const SITE = {
   email: 'info@moranogruppo.com',
   instagram: 'moranogruppo',
   instagramUrl: 'https://www.instagram.com/moranogruppo/',
+  /** Google Analytics 4 (la misma propiedad que tenía la web anterior vía Site Kit). */
+  gaId: 'G-11D4CBZ1ZM',
+  /** Solo se mide en este dominio (no en morano2.vercel.app ni en local). */
+  gaHost: 'moranogruppo.com',
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Edificio+Bahia+Centro+Carrera+1C+22-58+Santa+Marta+Colombia',
   // Direcciones del grupo (contacto y pie). Datos enviados por el cliente.
   sedes: [
